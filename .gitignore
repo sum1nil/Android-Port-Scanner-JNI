@@ -1,4 +1,27 @@
+<<<<<<< HEAD
 /bin
 /gen
 /obj
 /libs/*/*.so
+=======
+# built application files
+*.apk
+*.ap_
+
+# files for the dex VM
+*.dex
+
+# Java class files
+*.class
+
+# generated files
+bin/
+gen/
+
+# Local configuration file (sdk path, etc)
+local.properties
+
+# Eclipse project files
+.classpath
+.project
+>>>>>>> 705326f3253718451a50ebf87437be1a0d86bbd7
