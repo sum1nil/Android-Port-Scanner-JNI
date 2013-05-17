@@ -1,0 +1,20 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <style name="MyAppTheme" parent="@android:style/Theme.Holo.Light">
+    	<item name="android:actionBarStyle">@style/ScannerActionBarTabStyle</item>
+	</style>
+    
+	<style name="ScannerActionBarTabStyle" parent="android:style/Widget.Holo.ActionBar">
+	    <!-- style for the tabs -->
+	    <!-- <item name="android:background">@drawable/actionbar_tab_bg</item> -->
+	    <item name="android:paddingLeft">32dp</item>
+	    <item name="android:paddingRight">32dp</item>
+</style>
+
+	<style name="ScannerActionBar.TitleTextStyle"  parent="android:style/Widget.Holo.ActionBar">
+	    <item name="android:textColor">#F0F</item>
+	    <item name="android:textStyle">bold</item>
+	    <item name="android:textSize">24dip</item>
+	</style>
+    
+</resources>

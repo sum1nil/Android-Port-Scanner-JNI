@@ -1,0 +1,42 @@
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+	android:layout_width="match_parent"
+    android:layout_height="wrap_content" 
+	android:orientation="vertical">
+			
+	<TextView
+		android:id="@+id/host_label"
+		android:layout_height="45dp"
+		android:layout_width="wrap_content"
+		android:layout_marginTop="2dp"
+		android:textSize="32sp"
+		android:text="@string/host_name" />
+					
+	<EditText 
+		android:id="@+id/host_name_text"
+		android:layout_height="45dp"
+		android:layout_width="match_parent"
+		android:imeOptions="actionNext"
+		android:singleLine="true"
+		android:inputType="text"
+		android:hint="@string/host_name_hint"	/>
+	
+	<TextView
+		android:layout_height="45dp"
+		android:layout_width="wrap_content"
+		android:layout_marginTop="2dp"
+		android:textSize="32sp"
+		android:text="@string/port_range" />		
+			
+	<EditText 
+		android:id="@+id/port_range_text"
+		android:layout_height="45dp"
+		android:layout_width="match_parent"
+		android:imeOptions="actionDone"
+		android:singleLine="true"
+		android:digits="1234567890.,-" 
+		android:inputType="number"
+		android:hint="@string/ip_address_hint" />	
+</LinearLayout>
+		
+		
+		
