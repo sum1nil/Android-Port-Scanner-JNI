@@ -27,10 +27,7 @@ import android.view.KeyEvent;
 import android.view.Menu;
 import android.view.MenuItem;
 import android.view.inputmethod.EditorInfo;
-import android.widget.EditText;
-import android.widget.TextView;
 import android.widget.TextView.OnEditorActionListener;
-import android.widget.Toast;
 import android.widget.*;
 public class PortScannerActivity extends FragmentActivity 
         implements OnEditorActionListener, PortListFragment.OnPortSelectedListener {
@@ -178,10 +175,10 @@ public class PortScannerActivity extends FragmentActivity
 			 if(s.contains("-")) { 
 					String[] temp = s.split("-");
 					for(int i = Integer.parseInt(temp[0]);i <= Integer.parseInt(temp[1]); i++)
-						portList.add(new Integer(i));
+						portList.add( Integer.valueOf(i));
 			}
 			else
-				portList.add(new Integer(Integer.parseInt(s)));
+				portList.add(Integer.valueOf((Integer.parseInt(s))));
 		}
 		
 		for(Integer i : portList)
@@ -211,6 +208,6 @@ public class PortScannerActivity extends FragmentActivity
      * installation time by the package manager.
      */
     static {
-        System.loadLibrary("rawports-jni");
+        System.loadLibrary("icom-jni");
     }
    }

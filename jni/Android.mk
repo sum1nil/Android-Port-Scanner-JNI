@@ -18,5 +18,6 @@ include $(CLEAR_VARS)
 
 LOCAL_MODULE    := icom-jni
 LOCAL_SRC_FILES := icom-jni.c
-
+LOCAL_LDLIBS := -landroid -llog
+LOCAL_STATIC_LIBRARIES := native_app_glue
 include $(BUILD_SHARED_LIBRARY)
