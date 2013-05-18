@@ -19,7 +19,10 @@ struct tcphdr {
  */
 public class TcpHeader
 {
- 
+
+    static {
+        System.loadLibrary("icom-jni");
+    } 
  public TcpHeader(int sourceIp, int destIp, int doff, int res1, int cwr, int ece, int urg, int ack,
  		int pst, int rst,int syn, int fin, long seq, long ack_seq) {
 				this.sourceIp = sourceIp;
@@ -39,22 +42,22 @@ public class TcpHeader
  }
  
  private int sourceIp, destIp, doff, res1, cwr, ece, urg,ack, pst,rst,syn,fin;
-		public int getSourceIp() { return sourceIp; }
-		public int getDestIp() { return destIp; }
-		public int getDoff() { return doff; }
-		public int getres1() { return res1; }
-		public int getCwr() { return cwr; }
-		public int getEce() { return ece; }
-		public int getUrg() { return urg; }
-		public int getAck() { return ack; }
-		public int getPst() { return pst; }
-		public int getRst() { return rst; }
-		public int getSyn() { return sourceIp; }
-		public int getFin() { return sourceIp; }
+		public native int getSourceIp(); // { return sourceIp; }
+		public native int getDestIp(); // { return destIp; }
+		public native int getDoff(); // { return doff; }
+		public native int getres1(); // { return res1; }
+		public native int getCwr(); // { return cwr; }
+		public native int getEce(); // { return ece; }
+		public native int getUrg(); // { return urg; }
+		public native int getAck(); // { return ack; }
+		public native int getPst(); // { return pst; }
+		public native int getRst(); // { return rst; }
+		public native int getSyn(); // { return syn; }
+		public native int getFin(); // { return fin; }
 		
 		private long seq, ack_seq;
-		public long getSeq() { return seq; }
-		public long getAckSeq() { return ack_seq; };
+		public native long getSeq(); // { return seq; }
+		public native long getAckSeq(); // { return ack_seq; };
 		
 }
  

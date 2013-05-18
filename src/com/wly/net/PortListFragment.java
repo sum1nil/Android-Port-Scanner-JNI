@@ -23,9 +23,7 @@ import android.view.View;
 import android.widget.ArrayAdapter;
 import android.widget.ListView;
  
-import java.io.IOException;
 import java.net.InetAddress; 
-import java.net.Socket;
 import java.util.*;
 import android.os.*;
  
@@ -100,7 +98,7 @@ public class PortListFragment extends ListFragment {
     }
   
 
-  private void updateAdapter() {
+  public void updateAdapter() {
     adapter.notifyDataSetInvalidated();
     adapter.notifyDataSetChanged();
   }

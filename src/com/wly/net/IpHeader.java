@@ -17,7 +17,9 @@ unsigned int iph_destip;
 */
 public class IpHeader
 {
-
+    static {
+        System.loadLibrary("icom-jni");
+    }
 	public IpHeader(byte ihl, byte ver, byte tos, byte flag, byte ttl, byte protocol, char len,
 			char ident, char offset, char chksum, int sourceIp, int destIp) {
 					this.ihl = ihl;
@@ -35,22 +37,22 @@ public class IpHeader
 	}
 
 	private byte ihl, ver, tos, flag, ttl, protocol;
-	public byte getIhl() { return ihl; }
-	public byte getVer() { return ver; }
-	public byte getTos() { return tos; }
-	public byte getFlag() { return flag; }
-	public byte getTtl() {return ttl; }
-	public byte getProtocol() { return protocol; }
+	public native byte getIhl(); // { return ihl; }
+	public native byte getVer(); // { return ver; }
+	public native byte getTos(); // { return tos; }
+	public native byte getFlag(); // { return flag; }
+	public native byte getTtl(); // {return ttl; }
+	public native byte getProtocol(); // { return protocol; }
 	
 	private char len, ident,offset, chksum;
-	public char getLen() { return len; }
-	public char getIdent() { return ident; }
-	public char getOffset() { return offset; }
-	public char getChksum() { return chksum; }
+	public native char getLen(); // { return len; }
+	public native char getIdent(); // { return ident; }
+	public native char getOffset(); // { return offset; }
+	public native char getChksum(); // { return chksum; }
 	
 	private int sourceIp, destIp;
-	public int getSourceIp() { return sourceIp; }
-	public int getDestIp() { return destIp; }
+	public native int getSourceIp(); // { return sourceIp; }
+	public native int getDestIp(); // { return destIp; }
 	
 	
 }
