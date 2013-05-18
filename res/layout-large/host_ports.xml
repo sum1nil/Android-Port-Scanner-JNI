@@ -1,33 +1,37 @@
 <?xml version="1.0" encoding="utf-8"?>
 <RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent" >
-    
-  <include android:id="@+id/include" layout="@layout/inputbar" />
-  
-  <LinearLayout 
-    android:orientation="horizontal"
-    android:layout_width="match_parent"
-    android:layout_height="wrap_content" 
-    android:layout_below="@+id/include"
-    android:baselineAligned="false">
-    
 
-    <fragment 
-        android:name="com.wly.net.PortListFragment"
-        android:id="@+id/port_list_fragment"
-        android:layout_weight="1"
-        android:layout_width="0dp"
-        android:layout_height="match_parent" 
-        android:layout_gravity="bottom" />
-                 
+    <include
+        android:id="@+id/include"
+        layout="@layout/inputbar" />
 
-    <fragment 
-        android:name="com.wly.net.PortInfoFragment"
-        android:id="@+id/port_info_fragment"
-        android:layout_weight="2"
-        android:layout_width="0dp"
-        android:layout_height="match_parent" />
-  
-</LinearLayout>
- </RelativeLayout>
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_below="@+id/include"
+        android:baselineAligned="false"
+        android:orientation="horizontal" >
+
+        <fragment
+            android:id="@+id/port_list_fragment"
+            android:name="com.wly.net.PortListFragment"
+            android:layout_width="0dp"
+            android:layout_height="match_parent"
+            android:layout_gravity="bottom"
+            android:layout_weight="1"
+            tools:layout="@android:layout/list_content" />
+
+        <fragment
+            android:id="@+id/port_info_fragment"
+            android:name="com.wly.net.PortInfoFragment"
+            android:layout_width="0dp"
+            android:layout_height="match_parent"
+            android:layout_weight="2"
+            tools:layout="@layout/port_info_view" />
+
+    </LinearLayout>
+
+</RelativeLayout>

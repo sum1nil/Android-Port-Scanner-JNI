@@ -20,9 +20,6 @@ struct tcphdr {
 public class TcpHeader
 {
 
-    static {
-        System.loadLibrary("icom-jni");
-    } 
  public TcpHeader(int sourceIp, int destIp, int doff, int res1, int cwr, int ece, int urg, int ack,
  		int pst, int rst,int syn, int fin, long seq, long ack_seq) {
 				this.sourceIp = sourceIp;

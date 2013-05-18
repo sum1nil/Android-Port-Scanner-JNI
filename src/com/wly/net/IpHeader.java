@@ -17,9 +17,6 @@ unsigned int iph_destip;
 */
 public class IpHeader
 {
-    static {
-        System.loadLibrary("icom-jni");
-    }
 	public IpHeader(byte ihl, byte ver, byte tos, byte flag, byte ttl, byte protocol, char len,
 			char ident, char offset, char chksum, int sourceIp, int destIp) {
 					this.ihl = ihl;
