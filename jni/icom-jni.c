@@ -14,18 +14,19 @@
  * limitations under the License.
  *
  */
+//BEGIN_INCLUDE(all)
 #include <string.h>
 #include <jni.h>
+#include <errno.h>
 
-/* This is a trivial JNI example where we use a native method
- * to return a new VM String. See the corresponding Java source
- * file located at:
- *
- *   apps/samples/hello-jni/project/src/com/example/hellojni/HelloJni.java
- */
-jstring
-Java_com_wly_net_HelloJni_stringFromJNI( JNIEnv* env,
-                                                  jobject thiz )
-{
-    return (*env)->NewStringUTF(env, "Hello from JNI !");
-}
+#include <unistd.h>
+#include <stdio.h> 
+#include <sys/socket.h> 
+#include <netinet/ip.h> 
+#include <netinet/tcp.h>
+
+#include <android/sensor.h>
+#include <android/log.h>
+#include <android_native_app_glue.h>
+//END_INCLUDE(all)
+
