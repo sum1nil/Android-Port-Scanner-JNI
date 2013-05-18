@@ -33,3 +33,33 @@
 #include "TcpHeader.h"
 //END_INCLUDE(all)
 
+// IP Header functions
+
+JNIEXPORT jbyte JNICALL Java_com_wly_net_IpHeader_getIhl(JNIEnv* env, jobject obj) {
+	// Get a reference to this object's class 
+	jclass cls = (*env)->GetObjectClass(env, obj);
+	// Get the Field ID of the instance variable
+	jfieldID fid = (*env)->GetFieldID(env, cls, "ihl", "B");
+  if (fid == NULL) return;
+
+	// Get the value given the Field ID 
+	jbyte ihl = (*env)->GetByteField(env, obj, fid);
+	return ihl;
+	};
+	
+	JNIEXPORT jbyte JNICALL Java_com_wly_net_IpHeader_getVer(JNIEnv *, jobject)  {
+		// Get a reference to this object's class 
+		jclass cls = (*env)->GetObjectClass(env, obj);
+		// Get the Field ID of the instance variable
+		jfieldID fid = (*env)->GetFieldID(env, cls, "ver", "B");
+  	if (fid == NULL) return;
+
+		// Get the value given the Field ID 
+		jbyte ver = (*env)->GetByteField(env, obj, fid);
+		return ver;
+	}
+	
+	JNIEXPORT jbyte JNICALL Java_com_wly_net_IpHeader_getTos(JNIEnv *, jobject)	{
+	
+	
+	
