@@ -31,6 +31,8 @@ import android.widget.TextView.OnEditorActionListener;
 import android.widget.*;
 public class PortScannerActivity extends FragmentActivity 
         implements OnEditorActionListener, PortListFragment.OnPortSelectedListener {
+	// JNI methods
+	public native boolean sendPacket();
 	
 	static final String TAG = "PortScannerActivity";
 	static String host = null;
@@ -208,6 +210,6 @@ public class PortScannerActivity extends FragmentActivity
      * installation time by the package manager.
      */
     static {
-        System.loadLibrary("icom-jni");
+        System.loadLibrary("packetbuilder-jni");
     }
    }
