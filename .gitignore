@@ -4,6 +4,9 @@
 /obj
 /libs/*/*.so
 =======
+# NDK make files
+#.mk
+
 # built application files
 *.apk
 *.ap_
