@@ -53,6 +53,14 @@ extern "C" {
 JNIEXPORT jboolean JNICALL Java_com_wly_net_PortScannerActivity_sendPacket
   (JNIEnv *, jobject);
 
+/*
+ * Class:     com_wly_net_PortScannerActivity
+ * Method:    computeChecksum
+ * Signature: (CI)C
+ */
+JNIEXPORT jchar JNICALL Java_com_wly_net_PortScannerActivity_computeChecksum
+  (JNIEnv *, jobject, jchar, jint);
+
 #ifdef __cplusplus
 }
 #endif

@@ -15,17 +15,17 @@
  *
  */
 //BEGIN_INCLUDE(all)
-#include <string.h>
 #include <jni.h>
 #include <errno.h>
-
+#include <string.h>
 #include <unistd.h>
 #include <stdio.h> 
+#include <endian.h>
 #include <sys/socket.h> 
 #include <netinet/ip.h> 
 #include <netinet/tcp.h>
 
-#include <android/sensor.h>
+#include <android/api-level.h>
 #include <android/log.h>
 #include <android_native_app_glue.h>
 
@@ -37,52 +37,60 @@ static jclass ipCls = 0;
 static jclass tcpCls = 0;
 static jfieldID fid;
 
-#define __BIG_ENDIAN_BITFIELD
-#define PACKET_LEN = 81928
+#if (BYTE_ORDER == LITTLE_ENDIAN)
+	#define __LITTLE_ENDIAN__
+#elif (BYTE_ORDER == BIG_ENDIAN)
+	#define __BIG_ENDIAN__
+#endif
+
+#define PACKET_LEN  81928
+
 #define LOGI(...) ((void)android_log_print(ANDROID_LOG_INFO, "PortScannerActivity", __VA_ARGS__))
 #define LOGW(...) ((void)android_log_print(ANDROID_LOG_WARN, "PortScannerActivity", __VA_ARGS__))
-
-// Check for endianess
-bool isBigEndian()
-{
-int no = 1;
-char *chk = (char *)&no;
-
-if (chk[0] == 1)
-	{
-	return 0;
-	}
-	else
-	{
-	return 1;
-	}
-}
+#define LOGE(...) ((void)android_log_print(ANDROID_LOG_ERROR, "PortScannerActivity", __VA_ARGS__))
 
 // IP Header functions
-JNIEXPORT jboolean JNICALL Java_com_wly_net_IpHeader_buildIpHeader
-  (JNIEnv* env, jobject thiz, jobject obj)	{
-	jboolean result = JNI_TRUE;
-	char buffer[] = char[PACKET_LEN];
+  jboolean   Java_com_wly_net_IpHeader_buildIpHeader
+  (JNIEnv * env, jobject thiz, jobject obj)	{
+	jboolean result = JNI_FALSE;
+	char buffer[PACKET_LEN];
 	struct iphdr* ip = (struct iphdr*)buffer;
-	struct sockaddr_in sin,din;
 	if (ipCls == 0) {
-	    jclass cls1 = (*env)->GetObjectClass(env, obj);
+	    jclass cls1 = GetObjectClass(obj);
 	    if (cls1 == 0)
-	      return;
-	    ipCls = (*env)->NewGlobalRef(env, cls1);
+	      return result;
+	    ipCls = NewGlobalRef(obj);
 	    if (ipCls == 0)
-	      return;
-	    //	public IpHeader(byte ihl, byte ver, byte tos, byte flag, byte ttl, byte protocol, char len,
-		// char ident, char offset, char chksum, int sourceIp, int destIp)
-	    fid = (*env)->GetFieldID(env, cls1, "ihl", "B");
-	    ip->ihl = (*env)->GetByteField(env, obj, fid);
+	      return result;
 
-	  }
-	  ... /* access the field using cls and fid */
-	return result
+	    fid = GetFieldID(ipCls, "ihl", "B");
+	    ip->ihl = GetByteField(obj, fid);
+	    fid = GetFieldID(ipCls, "tos", "B");
+	    ip->tos = GetByteField(obj, fid);
+	    fid = GetFieldID(ipCls, "flag", "B");
+	    ip->flag = GetByteField(obj, fid);
+	    fid = GetFieldID(ipCls, "ttl", "B");
+	    ip->ttl = GetByteField(obj, fid);
+	    fid = GetFieldID(ipCls, "protocol", "B");
+	    ip->protocol = GetByteField(obj, fid);
+	    fid = GetFieldID(ipCls, "len", "C");
+	    ip->len = GetCharField(obj, fid);
+	    fid = GetFieldID(ipCls, "ident", "C");
+	    ip->ident = GetCharField(obj, fid);
+	    fid = GetFieldID(ipCls, "offset", "C");
+	    ip->offset = GetCharField(obj, fid);
+	    fid = GetFieldID(ipCls, "chksum", "C");
+	    ip->chksum = GetCharField(obj, fid);
+	    fid = GetFieldID(ipCls, "sourceIp", "I");
+	    ip->sourceip = GetCharField(obj, fid);
+	    fid = GetFieldID(ipCls, "destIp", "I");
+	    ip->destip = GetCharField(obj, fid);
+	}
+	return result;
 }
+
 // TCP Header functions
-JNIEXPORT jboolean JNICALL Java_com_wly_net_TcpHeader_buildTcpHeader
+  jboolean   Java_com_wly_net_TcpHeader_buildTcpHeader
   (JNIEnv* env, jobject thiz, jobject obj)	{
 	jboolean result = JNI_TRUE;
 
@@ -90,10 +98,18 @@ JNIEXPORT jboolean JNICALL Java_com_wly_net_TcpHeader_buildTcpHeader
 }
 
 // Send packet
-JNIEXPORT jboolean JNICALL Java_com_wly_net_PortScannerActivity_sendPacket
+  jboolean   Java_com_wly_net_PortScannerActivity_sendPacket
   (JNIEnv* env, jobject thiz)	{
 	jboolean result = JNI_TRUE;
 
 	return result;
 }
+
+  jchar   Java_com_wly_net_PortScannerActivity_computeChecksum
+  (JNIEnv* env, jobject thiz, jbyte, jint)	{
+	jchar result = "a";
+
+	return result;
+}
+
 

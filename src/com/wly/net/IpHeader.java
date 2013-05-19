@@ -67,7 +67,7 @@ public class IpHeader
 	public  char getChksum(){ return chksum; }
 	public  void setChksum(char chksum){ this.chksum = chksum; }
 
-	private int sourceIp, destIp;
+	private  int sourceIp, destIp;
 	public  int getSourceIp(){ return sourceIp; }
 	public  void setSourceIp(int sourceIp){ this.sourceIp = sourceIp; }
 

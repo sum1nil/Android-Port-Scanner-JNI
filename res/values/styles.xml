@@ -14,7 +14,7 @@
 	<style name="ScannerActionBar.TitleTextStyle"  parent="android:style/Widget.Holo.ActionBar">
 	    <item name="android:textColor">#F0F</item>
 	    <item name="android:textStyle">bold</item>
-	    <item name="android:textSize">24dip</item>
+	    <item name="android:textSize">24sp</item>
 	</style>
     
 </resources>
