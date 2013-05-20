@@ -1,27 +1,7 @@
 package com.wly.net;
-/*
+
 // The IP header's structure 
 
- struct iphdr {
- #ifdef __LITTLE_ENDIAN_BITFIELD
- __u8 ihl:4,
- version:4;
- #elif defined (__BIG_ENDIAN_BITFIELD)
- __u8 version:4,
- ihl:4;
- #else
- #error "Please fix <asm/byteorder.h>"
- #endif
- __u8 tos;
- __be16 tot_len;
- __be16 id;
- __be16 frag_off;
- __u8 ttl;
- __u8 protocol;
- __u16 check;
- __be32 saddr;
- __be32 daddr;
-*/
 public class IpHeader
 {
 	public IpHeader(byte ihl, byte version, byte tos, byte ttl,short check, short tot_len,
@@ -52,14 +32,13 @@ public class IpHeader
 	public  void setTtl(byte ttl){this.ttl = ttl; }
 
 	private short check, tot_len, id;
-
 	public  short getChksum(){ return check; }
 	public  void setChksum(short check){ this.check = check; }
 
-  public  short getTotalLength(){ return tot_len; }
+  	public  short getTotalLength(){ return tot_len; }
 	public  void setTotalLength(short tot_len){ this.tot_len = tot_len; }
   
-  public  short getId(){ return id; }
+  	public  short getId(){ return id; }
 	public  void setId(short id){ this.id = id; }
   
 	private float saddr, daddr;

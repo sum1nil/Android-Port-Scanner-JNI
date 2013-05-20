@@ -14,6 +14,15 @@
  * limitations under the License.
  *
  */
+#define JNI_FALSE  0
+#define JNI_TRUE   1
+
+#if (BYTE_ORDER == LITTLE_ENDIAN)
+  #define __LITTLE_ENDIAN_BITFIELD
+#elif (BYTE_ORDER == BIG_ENDIAN)
+  #define __BIG_ENDIAN_BITFIELD
+#endif
+
 //BEGIN_INCLUDE(all)
 #include <jni.h>
 #include <errno.h>
@@ -23,11 +32,7 @@
 #include <endian.h>
 #include <sys/socket.h> 
 
-#if (BYTE_ORDER == LITTLE_ENDIAN)
-  #define __LITTLE_ENDIAN_BITFIELD
-#elif (BYTE_ORDER == BIG_ENDIAN)
-  #define __BIG_ENDIAN_BITFIELD
-#endif
+
 #include <netinet/ip.h> 
 #include <netinet/tcp.h>
 
@@ -35,7 +40,8 @@
 #include <android/log.h>
 #include <android_native_app_glue.h>
 
-#include "Packets.h"
+#include "IpHeader.h"
+#include "TcpHeader.h"
 //END_INCLUDE(all)
 
 // Global references

@@ -26,7 +26,7 @@ public class TcpHeader
  
  public native boolean buildTcpHeader(TcpHeader tcpHeader);
  
- private short source, dest, doff, res1, cwr, ece, urg,ack, psh,rst,syn,fin,
+ private short source, dest, doff, res1, cwr, ece, urg, ack, psh, rst, syn, fin,
  	window, check, urg_ptr;
 		public  short getSource(){ return source; }
 		public  void setSource(short source){ this.source = source; }
