@@ -22,6 +22,12 @@
 #include <stdio.h> 
 #include <endian.h>
 #include <sys/socket.h> 
+
+#if (BYTE_ORDER == LITTLE_ENDIAN)
+  #define __LITTLE_ENDIAN_BITFIELD
+#elif (BYTE_ORDER == BIG_ENDIAN)
+  #define __BIG_ENDIAN_BITFIELD
+#endif
 #include <netinet/ip.h> 
 #include <netinet/tcp.h>
 
@@ -37,11 +43,7 @@ static jclass ipCls = 0;
 static jclass tcpCls = 0;
 static jfieldID fid;
 
-#if (BYTE_ORDER == LITTLE_ENDIAN)
-	#define __LITTLE_ENDIAN__
-#elif (BYTE_ORDER == BIG_ENDIAN)
-	#define __BIG_ENDIAN__
-#endif
+
 
 #define PACKET_LEN  81928
 
@@ -56,35 +58,35 @@ static jfieldID fid;
 	char buffer[PACKET_LEN];
 	struct iphdr* ip = (struct iphdr*)buffer;
 	if (ipCls == 0) {
-	    jclass cls1 = GetObjectClass(obj);
+	    jclass cls1 = (jclass)GetObjectClass(obj);
 	    if (cls1 == 0)
 	      return result;
-	    ipCls = NewGlobalRef(obj);
+	    ipCls = (jclass)NewGlobalRef(obj);
 	    if (ipCls == 0)
 	      return result;
-
-	    fid = GetFieldID(ipCls, "ihl", "B");
-	    ip->ihl = GetByteField(obj, fid);
-	    fid = GetFieldID(ipCls, "tos", "B");
-	    ip->tos = GetByteField(obj, fid);
-	    fid = GetFieldID(ipCls, "flag", "B");
-	    ip->flag = GetByteField(obj, fid);
-	    fid = GetFieldID(ipCls, "ttl", "B");
-	    ip->ttl = GetByteField(obj, fid);
-	    fid = GetFieldID(ipCls, "protocol", "B");
-	    ip->protocol = GetByteField(obj, fid);
-	    fid = GetFieldID(ipCls, "len", "C");
-	    ip->len = GetCharField(obj, fid);
-	    fid = GetFieldID(ipCls, "ident", "C");
-	    ip->ident = GetCharField(obj, fid);
-	    fid = GetFieldID(ipCls, "offset", "C");
-	    ip->offset = GetCharField(obj, fid);
-	    fid = GetFieldID(ipCls, "chksum", "C");
-	    ip->chksum = GetCharField(obj, fid);
-	    fid = GetFieldID(ipCls, "sourceIp", "I");
-	    ip->sourceip = GetCharField(obj, fid);
-	    fid = GetFieldID(ipCls, "destIp", "I");
-	    ip->destip = GetCharField(obj, fid);
+	      
+	    fid = (jfieldID)GetFieldID(env, ipCls, "ihl", "B");
+	    ip->ihl = (unsigned char) GetByteField(ipCls, fid);
+	    fid = (jfieldID)GetFieldID(env, ipCls, "tos", "B");
+	    ip->tos =  (unsigned char)GetByteField(ipCls, fid);
+	    fid = (jfieldID)GetFieldID(env, ipCls, "flag", "B");
+	    ip-> =  (unsigned char)GetByteField(ipCls, fid);
+	    fid = (jfieldID)GetFieldID(env, ipCls, "ttl", "B");
+	    ip->ttl =  (unsigned char)GetByteField(ipCls, fid);
+	    fid = (jfieldID)GetFieldID(env,ipCls, "protocol", "B");
+	    ip->protocol =  (unsigned char)GetByteField(obj, fid);
+	    fid = (jfieldID)GetFieldID(env,ipCls, "len", "C");
+	    ip->tot_len =  (unsigned short)GetCharField(obj, fid);
+	    fid = (jfieldID)GetFieldID(env,ipCls, "ident", "C");
+	    ip->ident = (unsigned char)GetCharField(obj, fid);
+	    fid = (jfieldID)GetFieldID(env, ipCls, "offset", "C");
+	    ip->offset = (unsigned char)GetCharField(obj, fid);
+	    fid = (jfieldID)GetFieldID(env, ipCls, "chksum", "C");
+	    ip->check =  (unsigned char)GetCharField(obj, fid);
+	    fid = (jfieldID)GetFieldID(env, ipCls, "sourceIp", "I");
+	    ip->saddr=  (unsigned char)GetCharField(obj, fid);
+	    fid = (jfieldID)GetFieldID(env, ipCls, "destIp", "I");
+	    ip->daddr =  (unsigned char)GetCharField(obj, fid);
 	}
 	return result;
 }
@@ -106,8 +108,8 @@ static jfieldID fid;
 }
 
   jchar   Java_com_wly_net_PortScannerActivity_computeChecksum
-  (JNIEnv* env, jobject thiz, jbyte, jint)	{
-	jchar result = "a";
+  (JNIEnv* env, jobject thiz, jbyte buf, jint numWords)	{
+	jchar result = 456;
 
 	return result;
 }

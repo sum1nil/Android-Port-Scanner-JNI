@@ -18,8 +18,7 @@ include $(CLEAR_VARS)
 
 LOCAL_MODULE    := packetbuilder
 LOCAL_SRC_FILES := PacketBuilder-jni.c
-LOCAL_LDLIBS := -landroid -llog 
+LOCAL_LDLIBS := -landroid -llog
 LOCAL_STATIC_LIBRARIES := native_app_glue
-LOCAL_C_INCLUDES := $(LOCAL_PATH)/include  $(LOCAL_PATH)/native_app_glue
-
+LOCAL_C_INCLUDES := /data/data/com.aide.ui/files/ndksupport-20130506/android-ndk-aide/sources/android/native_app_glue /data/data/com.aide.ui/files/ndksupport-20130506/android-ndk-aide/platforms/android-4/arch-arm/usr/include
 include $(BUILD_SHARED_LIBRARY)

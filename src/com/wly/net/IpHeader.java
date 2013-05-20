@@ -1,78 +1,73 @@
 package com.wly.net;
 /*
 // The IP header's structure 
-struct ipheader { 
-unsigned char iph_ihl:5, iph_ver:4; 
-unsigned char iph_tos; 
-unsigned short int iph_len;
-unsigned short int iph_ident; 
-unsigned char iph_flag; 
-unsigned short int iph_offset; 
-unsigned char iph_ttl; 
-unsigned char iph_protocol; 
-unsigned short int iph_chksum; 
-unsigned int iph_sourceip;
-unsigned int iph_destip; 
-};
+
+ struct iphdr {
+ #ifdef __LITTLE_ENDIAN_BITFIELD
+ __u8 ihl:4,
+ version:4;
+ #elif defined (__BIG_ENDIAN_BITFIELD)
+ __u8 version:4,
+ ihl:4;
+ #else
+ #error "Please fix <asm/byteorder.h>"
+ #endif
+ __u8 tos;
+ __be16 tot_len;
+ __be16 id;
+ __be16 frag_off;
+ __u8 ttl;
+ __u8 protocol;
+ __u16 check;
+ __be32 saddr;
+ __be32 daddr;
 */
 public class IpHeader
 {
-	public IpHeader(byte ihl, byte ver, byte tos, byte flag, byte ttl, byte protocol, char len,
-			char ident, char offset, char chksum, int sourceIp, int destIp) {
+	public IpHeader(byte ihl, byte version, byte tos, byte ttl,short check, short tot_len,
+			short id, float saddr, float daddr) {
 					this.ihl = ihl;
-					this.ver = ver;
+					this.version = version;
 					this.tos = tos;
-					this.flag = flag;
 					this.ttl = ttl;
-					this.protocol = protocol;
-					this.len = len;
-					this.ident = ident;
-					this.offset = offset;
-					this.chksum = chksum;
-					this.sourceIp = sourceIp;
-					this.destIp = destIp;
+          this.check = check;
+					this.tot_len = tot_len;
+					this.saddr = saddr;
+					this.daddr = daddr;
 	}
 
 	public native boolean buildIpHeader(IpHeader ipHeader);
 	
-	private byte ihl, ver, tos, flag, ttl, protocol;
+	private byte ihl, version, tos, ttl;
 	public  byte getIhl(){ return ihl; }
 	public  void setIhl(byte ihl){ this.ihl = ihl; }
 
-	public  byte getVer(){ return ver; }
-	public  void setVer(byte ver){ this.ver = ver; }
+	public  byte getVer(){ return version; }
+	public  void setVer(byte version){ this.version = version; }
 
 	public  byte getTos(){ return tos; }
 	public  void setTos(byte tos){ this.tos = tos; }
 
-	public  byte getFlag(){ return flag; }
-	public  void setFlag(byte flag){ this.flag = flag; }
-
 	public  byte getTtl(){return ttl; }
 	public  void setTtl(byte ttl){this.ttl = ttl; }
 
-	public  byte setProtocol(){ return protocol; }
-	public  void setProtocol(byte protocol){ this.protocol = protocol; }
+	private short check, tot_len, id;
 
-	private char len, ident,offset, chksum;
-	public  char getLen(){ return len; }
-	public  void setLen(char len){ this.len = len; }
-	
-	public  char getIdent(){ return ident; }
-	public  void setIdent(char ident){ this.ident = ident; }
+	public  short getChksum(){ return check; }
+	public  void setChksum(short check){ this.check = check; }
 
-	public  char getOffset(){ return offset; }
-	public  void setOffset(char offset){ this.offset = offset; }
+  public  short getTotalLength(){ return tot_len; }
+	public  void setTotalLength(short tot_len){ this.tot_len = tot_len; }
+  
+  public  short getId(){ return id; }
+	public  void setId(short id){ this.id = id; }
+  
+	private float saddr, daddr;
+	public  float getSourceAddress(){ return saddr; }
+	public  void setSourceAddress(float saddr){ this.saddr = saddr; }
 
-	public  char getChksum(){ return chksum; }
-	public  void setChksum(char chksum){ this.chksum = chksum; }
-
-	private  int sourceIp, destIp;
-	public  int getSourceIp(){ return sourceIp; }
-	public  void setSourceIp(int sourceIp){ this.sourceIp = sourceIp; }
-
-	public  int getDestIp(){ return destIp; }
-	public  void setDestIp(int destIp){ this.destIp = destIp; }
+	public  float getDestAddress(){ return daddr; }
+	public  void setDestAddress(float daddr){ this.daddr = daddr; }
 
 	
 }
