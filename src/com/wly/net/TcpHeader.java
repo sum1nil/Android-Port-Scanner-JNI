@@ -24,7 +24,6 @@ public class TcpHeader
 				this.ack_seq = ack_seq; 
  }
  
- public native boolean buildTcpHeader(TcpHeader tcpHeader);
  
  private short source, dest, doff, res1, cwr, ece, urg, ack, psh, rst, syn, fin,
  	window, check, urg_ptr;

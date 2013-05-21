@@ -35,9 +35,7 @@
 #include <android/log.h>
 #include <android_native_app_glue.h>
 
-#include "IpHeader.h"
-#include "TcpHeader.h"
-#include "ActivityHeader.h"
+#include "Packets.h"
 //END_INCLUDE(all)
 
 #define LOGI(...) ((void)__android_log_print(ANDROID_LOG_INFO, "PortScannerActivity", __VA_ARGS__))
@@ -52,7 +50,7 @@ struct iphdr* ip = (struct iphdr*)buffer;
 jboolean result = JNI_TRUE;
 
 // IP Header functions
-jboolean   Java_com_wly_net_IpHeader_buildIpHeader(JNIEnv * env, jobject thiz, jobject obj)	{
+JNIEXPORT jboolean JNICALL  Java_com_wly_net_IpHeader_buildIpHeader(JNIEnv * env, jobject thiz, jobject obj)	{
 	
 		jfieldID fid = 0;
 		jclass ipCls = 0;
@@ -104,7 +102,7 @@ jboolean   Java_com_wly_net_IpHeader_buildIpHeader(JNIEnv * env, jobject thiz, j
 }
 
 // TCP Header functions
-  jboolean   Java_com_wly_net_TcpHeader_buildTcpHeader
+JNIEXPORT jboolean JNICALL  Java_com_wly_net_TcpHeader_buildTcpHeader
   (JNIEnv* env, jobject thiz, jobject obj)	{
 	jboolean result = JNI_TRUE;
 	jclass tcpCls = 0;
@@ -113,14 +111,14 @@ jboolean   Java_com_wly_net_IpHeader_buildIpHeader(JNIEnv * env, jobject thiz, j
 }
 
 // Send packet
-  jboolean   Java_com_wly_net_PortScannerActivity_sendPacket
+JNIEXPORT  jboolean JNICALL  Java_com_wly_net_PortScannerActivity_sendPacket
   (JNIEnv* env, jobject thiz)	{
 	jboolean result = JNI_TRUE;
 
 	return result;
 }
-
-jchar Java_com_wly_net_PortScannerActivity_computeChecksum
+// Compute packet checksum value
+JNIEXPORT jlong JNICALL Java_com_wly_net_PortScannerActivity_computeChecksum
   (JNIEnv* env, jobject thiz, jint nwords)	{
   unsigned long sum = 0;
   unsigned short* buf = (unsigned short*)buffer;
@@ -129,7 +127,7 @@ jchar Java_com_wly_net_PortScannerActivity_computeChecksum
 		sum = (sum >> 16) + (sum &0xffff);
 		sum += (sum >> 16);
 	}
-	return (unsigned short)(~sum); 
+	return (long)(~sum);
 }
 
 

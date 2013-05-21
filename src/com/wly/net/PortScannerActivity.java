@@ -31,10 +31,13 @@ import android.widget.TextView.OnEditorActionListener;
 import android.widget.*;
 public class PortScannerActivity extends FragmentActivity 
         implements OnEditorActionListener, PortListFragment.OnPortSelectedListener {
-	// JNI methods
-	public native boolean sendPacket();
-	public native char computeChecksum(int nwords);
 	
+	// JNI library methods
+	public native boolean sendPacket();
+	public native long computeChecksum(int nwords);
+	public native boolean buildIpHeader(IpHeader ipHeader);
+	public native boolean buildTcpHeader(TcpHeader tcpHeader);
+
 	static final String TAG = "PortScannerActivity";
 	static String host = null;
 	static String ipAddress = null;
@@ -136,7 +139,6 @@ public class PortScannerActivity extends FragmentActivity
 
 	@Override
 	public boolean onEditorAction(TextView v, int actionId, KeyEvent event) {
-		// TODO Auto-generated method stub
 		boolean result = true;
 		if (actionId == EditorInfo.IME_ACTION_NEXT || actionId == EditorInfo.IME_ACTION_DONE) {
 			// the user is done typing.
@@ -158,7 +160,7 @@ public class PortScannerActivity extends FragmentActivity
 			adapter.notifyDataSetInvalidated();
 			adapter.notifyDataSetChanged();
 			
-			ip.buildIpHeader(ip);
+			 boolean success = buildIpHeader(ip);
       break;
 			default:
 				result = false;
@@ -172,7 +174,6 @@ public class PortScannerActivity extends FragmentActivity
 	}
 	
 	private void parsePorts(String string) {
-		// TODO Auto-generated method stub
 		portList.clear();
 		String[] ports = string.split(",");
     //Toast.makeText(this,"Ports string: "+ ports[0], Toast.LENGTH_LONG).show();
@@ -185,7 +186,7 @@ public class PortScannerActivity extends FragmentActivity
 			else
 				portList.add(Integer.valueOf((Integer.parseInt(s))));
 		}
-		To Do: sort ports
+		// To Do: sort ports descending
 		//for(Integer i : portList)
 			//Toast.makeText(this,"Port# " + i.intValue(),Toast.LENGTH_SHORT).show();
 				

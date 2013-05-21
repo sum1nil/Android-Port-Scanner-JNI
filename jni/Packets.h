@@ -18,10 +18,26 @@ JNIEXPORT jboolean JNICALL Java_com_wly_net_PortScannerActivity_sendPacket
 /*
  * Class:     com_wly_net_PortScannerActivity
  * Method:    computeChecksum
- * Signature: (I)C
+ * Signature: (I)J
  */
-JNIEXPORT jchar JNICALL Java_com_wly_net_PortScannerActivity_computeChecksum
+JNIEXPORT jlong JNICALL Java_com_wly_net_PortScannerActivity_computeChecksum
   (JNIEnv *, jobject, jint);
+
+/*
+ * Class:     com_wly_net_PortScannerActivity
+ * Method:    buildIpHeader
+ * Signature: (Lcom/wly/net/IpHeader;)Z
+ */
+JNIEXPORT jboolean JNICALL Java_com_wly_net_PortScannerActivity_buildIpHeader
+  (JNIEnv *, jobject, jobject);
+
+/*
+ * Class:     com_wly_net_PortScannerActivity
+ * Method:    buildTcpHeader
+ * Signature: (Lcom/wly/net/TcpHeader;)Z
+ */
+JNIEXPORT jboolean JNICALL Java_com_wly_net_PortScannerActivity_buildTcpHeader
+  (JNIEnv *, jobject, jobject);
 
 #ifdef __cplusplus
 }

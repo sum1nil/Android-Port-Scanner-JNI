@@ -16,7 +16,6 @@ public class IpHeader
 					this.daddr = daddr;
 	}
 
-	public native boolean buildIpHeader(IpHeader ipHeader);
 	
 	private byte ihl, version, tos, ttl;
 	public  byte getIhl(){ return ihl; }
