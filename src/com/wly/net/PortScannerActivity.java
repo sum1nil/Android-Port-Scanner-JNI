@@ -33,7 +33,7 @@ public class PortScannerActivity extends FragmentActivity
         implements OnEditorActionListener, PortListFragment.OnPortSelectedListener {
 	// JNI methods
 	public native boolean sendPacket();
-	public native char computeChecksum(char buf, int nwords);
+	public native char computeChecksum(int nwords);
 	
 	static final String TAG = "PortScannerActivity";
 	static String host = null;

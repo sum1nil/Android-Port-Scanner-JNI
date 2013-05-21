@@ -38,42 +38,51 @@
 #include "IpHeader.h"
 #include "TcpHeader.h"
 //END_INCLUDE(all)
-
-// Global references
-static jclass ipCls = 0;
-static jclass tcpCls = 0;
-static jfieldID fid;
-
-
-
-#define PACKET_LEN  81928
-
 #define LOGI(...) ((void)android_log_print(ANDROID_LOG_INFO, "PortScannerActivity", __VA_ARGS__))
 #define LOGW(...) ((void)android_log_print(ANDROID_LOG_WARN, "PortScannerActivity", __VA_ARGS__))
 #define LOGE(...) ((void)android_log_print(ANDROID_LOG_ERROR, "PortScannerActivity", __VA_ARGS__))
+#define PACKET_LEN  81928
+
+// Global references
+char buffer[PACKET_LEN];
+struct iphdr* ip = (struct iphdr*)buffer;
+
+jboolean result = JNI_TRUE;
 
 // IP Header functions
-  jboolean   Java_com_wly_net_IpHeader_buildIpHeader
-  (JNIEnv * env, jobject thiz, jobject obj)	{
-	jboolean result = JNI_TRUE;
-	char buffer[PACKET_LEN];
-	struct iphdr* ip = (struct iphdr*)buffer;
-	if (ipCls == 0) {
-	    jclass cls1 = (*env)->GetObjectClass(env, obj);
-	    if (cls1 == 0) {
+jboolean   Java_com_wly_net_IpHeader_buildIpHeader(JNIEnv * env, jobject thiz, jobject obj)	{
+	
+		jfieldID fid = 0;
+		jclass ipCls = 0;
+		ipCls = (*env)->GetObjectClass(env, obj);
+	  if (ipCls == 0) {
 	    	result = JNI_FALSE;
+	    	LOGE("(C) Could not retrieve ip java class");
+	    	return result;
+	  }
+	    
+	   	fid = (*env)->GetFieldID(env, ipCls, "ihl", "B");
+	   	if(fid == 0)	{
+	   		result = JNI_FALSE;;
+	    	LOGE("(C) Could not retrieve ip class ihl value");
 	    	return result;
 	    }
-	    ipCls = (*env)->NewGlobalRef(env, obj);
-	    if (ipCls == 0) {
-	    	result = JNI_FALSE;
-	    	return result;
+	    else  {
+	    	ip->ihl = (*env)->GetByteField(env, ipCls, fid);
+	    	LOGI("Set ip class ihl value to %d", ip->ihl);
 	    }
-	      
-	    fid = (*env)->GetFieldID(env, ipCls, "ihl", "B");
-	    ip->ihl = (*env)->GetByteField(env, ipCls, fid);
+	    
 	    fid = (*env)->GetFieldID(env, ipCls, "version", "B");
-	    ip->version = (*env)->GetByteField(env, ipCls, fid);
+	    if(fid == 0)	{
+	   		result = JNI_FALSE;
+	    	LOGE("(C) Could not retrieve ip class version value");
+	    	return result;
+	    }
+	    else  {
+	    	ip->version = (*env)->GetByteField(env, ipCls, fid);
+	    	LOGI("Set ip class version value to ", ip->version);
+	    }
+	  
 	    fid = (*env)->GetFieldID(env, ipCls, "tos", "B");
 	    ip->tos = (*env)->GetByteField(env, ipCls, fid);
 	    fid = (*env)->GetFieldID(env, ipCls, "ttl", "B");
@@ -97,6 +106,7 @@ static jfieldID fid;
   jboolean   Java_com_wly_net_TcpHeader_buildTcpHeader
   (JNIEnv* env, jobject thiz, jobject obj)	{
 	jboolean result = JNI_TRUE;
+	jclass tcpCls = 0;
 
 	return result;
 }
@@ -111,9 +121,12 @@ static jfieldID fid;
 
   jchar   Java_com_wly_net_PortScannerActivity_computeChecksum
   (JNIEnv* env, jobject thiz, jbyte buf, jint numWords)	{
-	jchar result = 456;
-
-	return result;
+  unsigned long sum = 0;
+	for(sum=0; nwords>0; nwords--) sum += *buf++  {
+	sum = (sum >> 16) + (sum &0xffff); 
+	sum += (sum >> 16); 
+	}
+	return (unsigned short)(~sum); 
 }
 
 
