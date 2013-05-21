@@ -37,10 +37,12 @@
 
 #include "IpHeader.h"
 #include "TcpHeader.h"
+#include "ActivityHeader.h"
 //END_INCLUDE(all)
-#define LOGI(...) ((void)android_log_print(ANDROID_LOG_INFO, "PortScannerActivity", __VA_ARGS__))
-#define LOGW(...) ((void)android_log_print(ANDROID_LOG_WARN, "PortScannerActivity", __VA_ARGS__))
-#define LOGE(...) ((void)android_log_print(ANDROID_LOG_ERROR, "PortScannerActivity", __VA_ARGS__))
+
+#define LOGI(...) ((void)__android_log_print(ANDROID_LOG_INFO, "PortScannerActivity", __VA_ARGS__))
+#define LOGW(...) ((void)__android_log_print(ANDROID_LOG_WARN, "PortScannerActivity", __VA_ARGS__))
+#define LOGE(...) ((void)__android_log_print(ANDROID_LOG_ERROR, "PortScannerActivity", __VA_ARGS__))
 #define PACKET_LEN  81928
 
 // Global references
@@ -69,7 +71,7 @@ jboolean   Java_com_wly_net_IpHeader_buildIpHeader(JNIEnv * env, jobject thiz, j
 	    }
 	    else  {
 	    	ip->ihl = (*env)->GetByteField(env, ipCls, fid);
-	    	LOGI("Set ip class ihl value to %d", ip->ihl);
+	    	LOGI("Set ip class ihl value to %i", ip->ihl);
 	    }
 	    
 	    fid = (*env)->GetFieldID(env, ipCls, "version", "B");
@@ -80,7 +82,7 @@ jboolean   Java_com_wly_net_IpHeader_buildIpHeader(JNIEnv * env, jobject thiz, j
 	    }
 	    else  {
 	    	ip->version = (*env)->GetByteField(env, ipCls, fid);
-	    	LOGI("Set ip class version value to ", ip->version);
+	    	LOGI("Set ip class version value to %i", ip->version);
 	    }
 	  
 	    fid = (*env)->GetFieldID(env, ipCls, "tos", "B");
@@ -98,8 +100,7 @@ jboolean   Java_com_wly_net_IpHeader_buildIpHeader(JNIEnv * env, jobject thiz, j
 	    fid = (*env)->GetFieldID(env, ipCls, "daddr", "F");
 	    ip->daddr = (*env)->GetFloatField(env, ipCls, fid);
 
-	}
-	return result;
+	    return result;
 }
 
 // TCP Header functions
@@ -119,12 +120,14 @@ jboolean   Java_com_wly_net_IpHeader_buildIpHeader(JNIEnv * env, jobject thiz, j
 	return result;
 }
 
-  jchar   Java_com_wly_net_PortScannerActivity_computeChecksum
-  (JNIEnv* env, jobject thiz, jbyte buf, jint numWords)	{
+jchar Java_com_wly_net_PortScannerActivity_computeChecksum
+  (JNIEnv* env, jobject thiz, jint nwords)	{
   unsigned long sum = 0;
-	for(sum=0; nwords>0; nwords--) sum += *buf++  {
-	sum = (sum >> 16) + (sum &0xffff); 
-	sum += (sum >> 16); 
+  unsigned short* buf = (unsigned short*)buffer;
+	for(sum=0; nwords>0; nwords--) {
+		sum += *buf++;
+		sum = (sum >> 16) + (sum &0xffff);
+		sum += (sum >> 16);
 	}
 	return (unsigned short)(~sum); 
 }

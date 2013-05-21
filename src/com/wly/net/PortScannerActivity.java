@@ -40,7 +40,8 @@ public class PortScannerActivity extends FragmentActivity
 	static String ipAddress = null;
 	static List<Integer> portList = new ArrayList<Integer>();
 	public static List<Integer> getPortList() { return portList; }
-    /** Called when the activity is first created. */
+    static IpHeader ip = new IpHeader(new Byte((byte) 5).byteValue(), new Byte((byte) 4).byteValue(), new Byte((byte) 0).byteValue(), new Byte((byte) 0).byteValue(), new Short((short) 0).shortValue(), new Short((short) 0).shortValue(), new Short((short) 0).shortValue(), 0f, 0f);
+	/** Called when the activity is first created. */
     @Override
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -154,9 +155,10 @@ public class PortScannerActivity extends FragmentActivity
 		  	parsePorts(((EditText)v).getText().toString());
 		  	BaseAdapter adapter = (BaseAdapter) ((PortListFragment) getSupportFragmentManager().findFragmentById(R.id.port_list_fragment)).getListAdapter();
 		    
-				adapter.notifyDataSetInvalidated();
-				
-        adapter.notifyDataSetChanged();  
+			adapter.notifyDataSetInvalidated();
+			adapter.notifyDataSetChanged();
+			
+			ip.buildIpHeader(ip);
       break;
 			default:
 				result = false;
@@ -183,9 +185,9 @@ public class PortScannerActivity extends FragmentActivity
 			else
 				portList.add(Integer.valueOf((Integer.parseInt(s))));
 		}
-		
-		for(Integer i : portList)
-			Toast.makeText(this,"Port# " + i.intValue(),Toast.LENGTH_SHORT).show();
+		To Do: sort ports
+		//for(Integer i : portList)
+			//Toast.makeText(this,"Port# " + i.intValue(),Toast.LENGTH_SHORT).show();
 				
 	}
 
