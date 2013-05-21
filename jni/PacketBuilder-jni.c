@@ -14,9 +14,6 @@
  * limitations under the License.
  *
  */
-#define JNI_FALSE  0
-#define JNI_TRUE   1
-
 #if (BYTE_ORDER == LITTLE_ENDIAN)
   #define __LITTLE_ENDIAN_BITFIELD
 #elif (BYTE_ORDER == BIG_ENDIAN)
@@ -31,8 +28,6 @@
 #include <stdio.h> 
 #include <endian.h>
 #include <sys/socket.h> 
-
-
 #include <netinet/ip.h> 
 #include <netinet/tcp.h>
 
@@ -60,39 +55,40 @@ static jfieldID fid;
 // IP Header functions
   jboolean   Java_com_wly_net_IpHeader_buildIpHeader
   (JNIEnv * env, jobject thiz, jobject obj)	{
-	jboolean result = JNI_FALSE;
+	jboolean result = JNI_TRUE;
 	char buffer[PACKET_LEN];
 	struct iphdr* ip = (struct iphdr*)buffer;
 	if (ipCls == 0) {
-	    jclass cls1 = (jclass)GetObjectClass(obj);
-	    if (cls1 == 0)
-	      return result;
-	    ipCls = (jclass)NewGlobalRef(obj);
-	    if (ipCls == 0)
-	      return result;
+	    jclass cls1 = (*env)->GetObjectClass(env, obj);
+	    if (cls1 == 0) {
+	    	result = JNI_FALSE;
+	    	return result;
+	    }
+	    ipCls = (*env)->NewGlobalRef(env, obj);
+	    if (ipCls == 0) {
+	    	result = JNI_FALSE;
+	    	return result;
+	    }
 	      
-	    fid = (jfieldID)GetFieldID(env, ipCls, "ihl", "B");
-	    ip->ihl = (unsigned char) GetByteField(ipCls, fid);
-	    fid = (jfieldID)GetFieldID(env, ipCls, "tos", "B");
-	    ip->tos =  (unsigned char)GetByteField(ipCls, fid);
-	    fid = (jfieldID)GetFieldID(env, ipCls, "flag", "B");
-	    ip-> =  (unsigned char)GetByteField(ipCls, fid);
-	    fid = (jfieldID)GetFieldID(env, ipCls, "ttl", "B");
-	    ip->ttl =  (unsigned char)GetByteField(ipCls, fid);
-	    fid = (jfieldID)GetFieldID(env,ipCls, "protocol", "B");
-	    ip->protocol =  (unsigned char)GetByteField(obj, fid);
-	    fid = (jfieldID)GetFieldID(env,ipCls, "len", "C");
-	    ip->tot_len =  (unsigned short)GetCharField(obj, fid);
-	    fid = (jfieldID)GetFieldID(env,ipCls, "ident", "C");
-	    ip->ident = (unsigned char)GetCharField(obj, fid);
-	    fid = (jfieldID)GetFieldID(env, ipCls, "offset", "C");
-	    ip->offset = (unsigned char)GetCharField(obj, fid);
-	    fid = (jfieldID)GetFieldID(env, ipCls, "chksum", "C");
-	    ip->check =  (unsigned char)GetCharField(obj, fid);
-	    fid = (jfieldID)GetFieldID(env, ipCls, "sourceIp", "I");
-	    ip->saddr=  (unsigned char)GetCharField(obj, fid);
-	    fid = (jfieldID)GetFieldID(env, ipCls, "destIp", "I");
-	    ip->daddr =  (unsigned char)GetCharField(obj, fid);
+	    fid = (*env)->GetFieldID(env, ipCls, "ihl", "B");
+	    ip->ihl = (*env)->GetByteField(env, ipCls, fid);
+	    fid = (*env)->GetFieldID(env, ipCls, "version", "B");
+	    ip->version = (*env)->GetByteField(env, ipCls, fid);
+	    fid = (*env)->GetFieldID(env, ipCls, "tos", "B");
+	    ip->tos = (*env)->GetByteField(env, ipCls, fid);
+	    fid = (*env)->GetFieldID(env, ipCls, "ttl", "B");
+	    ip->ttl = (*env)->GetByteField(env, ipCls, fid);
+	    fid = (*env)->GetFieldID(env,ipCls, "check", "S");
+	    ip->check = (*env)->GetShortField(env, ipCls, fid);
+	    fid = (*env)->GetFieldID(env,ipCls, "tot_len", "S");
+	    ip->tot_len = (*env)->GetShortField(env, ipCls, fid);
+	    fid = (*env)->GetFieldID(env,ipCls, "id", "S");
+	    ip->id = (*env)->GetShortField(env, ipCls, fid);
+	    fid = (*env)->GetFieldID(env, ipCls, "saddr", "F");
+	    ip->saddr = (*env)->GetFloatField(env, ipCls, fid);
+	    fid = (*env)->GetFieldID(env, ipCls, "daddr", "F");
+	    ip->daddr = (*env)->GetFloatField(env, ipCls, fid);
+
 	}
 	return result;
 }

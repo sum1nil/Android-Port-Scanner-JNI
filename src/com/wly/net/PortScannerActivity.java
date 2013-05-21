@@ -211,6 +211,6 @@ public class PortScannerActivity extends FragmentActivity
      * installation time by the package manager.
      */
     static {
-        System.loadLibrary("packetbuilder-jni");
+        System.loadLibrary("packetbuilder");
     }
    }
