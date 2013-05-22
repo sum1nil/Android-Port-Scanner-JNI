@@ -90,7 +90,14 @@ public class PortScannerActivity extends FragmentActivity
 	      switch (item.getItemId()) {
 		     case R.id.scan_action:
 		        Toast.makeText(this, "Scan Clicked", Toast.LENGTH_SHORT).show();
-		    	
+		        try	{
+					//Thread.sleep(30 * 1000);
+					@SuppressWarnings("unused")
+					boolean success = buildIpHeader(ip);
+				}
+				catch(Exception e) {
+					e.printStackTrace();
+				}
 		        break;
 	
 		      case R.id.stop_action:
@@ -160,8 +167,8 @@ public class PortScannerActivity extends FragmentActivity
 			adapter.notifyDataSetInvalidated();
 			adapter.notifyDataSetChanged();
 			
-			 boolean success = buildIpHeader(ip);
-      break;
+			
+			break;
 			default:
 				result = false;
 				break;
@@ -214,6 +221,12 @@ public class PortScannerActivity extends FragmentActivity
      * installation time by the package manager.
      */
     static {
-        System.loadLibrary("packetbuilder");
+    	try	{
+    		System.loadLibrary("packetbuilder");
+    	}
+    	catch(UnsatisfiedLinkError e) {
+    		e.printStackTrace();
+    	}
     }
+    
    }
