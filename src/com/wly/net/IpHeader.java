@@ -4,7 +4,7 @@ package com.wly.net;
 
 public class IpHeader
 {
-	public IpHeader(char ihl, char version,  char tos, char ttl, char check, short tot_len,
+	public IpHeader(short ihl, short version,  short tos, short ttl, short check, short tot_len,
 			short id, short frag_off, double saddr, double daddr) {
 					this.ihl = ihl;
 					this.version = version;
@@ -19,21 +19,22 @@ public class IpHeader
 	}
 
 	
-	private char ihl, version, tos, ttl, check;
-	public  char getIhl(){ return ihl; }
-	public  void setIhl(char ihl){ this.ihl = ihl; }
+	private short ihl, version, tos, ttl, check;
+	
+	public  short getIhl(){ return ihl; }
+	public  void setIhl(short ihl){ this.ihl = ihl; }
 
-	public  char getVer(){ return version; }
-	public  void setVer(char version){ this.version = version; }
+	public  short getVer(){ return version; }
+	public  void setVer(short version){ this.version = version; }
 
-	public  char getTos(){ return tos; }
-	public  void setTos(char tos){ this.tos = tos; }
+	public  short getTos(){ return tos; }
+	public  void setTos(short tos){ this.tos = tos; }
 
-	public  char getTtl(){return ttl; }
-	public  void setTtl(char ttl){this.ttl = ttl; }
+	public  short getTtl(){return ttl; }
+	public  void setTtl(short ttl){this.ttl = ttl; }
 
-	public  char getCheck(){ return check; }
-	public  void setCheck(char check){ this.check = check; }
+	public  short getCheck(){ return check; }
+	public  void setCheck(short check){ this.check = check; }
 	
 	private short tot_len, id, frag_off;
 

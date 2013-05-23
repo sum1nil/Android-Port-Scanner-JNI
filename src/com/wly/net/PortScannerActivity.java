@@ -43,7 +43,7 @@ public class PortScannerActivity extends FragmentActivity
 	static String ipAddress = null;
 	static List<Integer> portList = new ArrayList<Integer>();
 	public static List<Integer> getPortList() { return portList; }
-	static IpHeader ip = new IpHeader((char)5, (char)4, (char)0, (char)0, (char)0, (short)0, (short)0, (short)0, 0.0, 0.0);
+	static IpHeader ip = new IpHeader((short)5, (short)4, (short)0,(short)0, (short)0,(short)0,(short)0, (short)0, 0.0, 0.0);
 	/** Called when the activity is first created. */
     @Override
     public void onCreate(Bundle savedInstanceState) {
@@ -91,8 +91,11 @@ public class PortScannerActivity extends FragmentActivity
 		     case R.id.scan_action:
 		        Toast.makeText(this, "Scan Clicked", Toast.LENGTH_SHORT).show();
 		        try	{
-							//	@SuppressWarnings("unused")
-								//boolean success = buildIpHeader(ip);
+									//@SuppressWarnings("unused")
+									if(ip == null)
+										Log.d(TAG, "ip is null");
+								  else
+										result = buildIpHeader(ip);
 						}
 				catch(Exception e) {
 					e.printStackTrace();
@@ -221,7 +224,7 @@ public class PortScannerActivity extends FragmentActivity
      */
     static {
     	try	{
-				Thread. sleep(60 * 1000);
+				Thread. sleep(45 * 1000);
     		System.loadLibrary("packetbuilder");
     	}
     	catch(UnsatisfiedLinkError e) {
@@ -230,6 +233,7 @@ public class PortScannerActivity extends FragmentActivity
 			catch(InterruptedException e)	{
 				e.printStackTrace();	}
 			}
-    }
+    
+	}
     
    

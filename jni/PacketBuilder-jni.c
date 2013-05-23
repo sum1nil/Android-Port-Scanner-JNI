@@ -50,25 +50,25 @@ struct iphdr* ip = (struct iphdr*)buffer;
 // IP Header functions
 static jboolean BuildIpHeader
   (JNIEnv* env, jobject callObj, jobject obj) {
-	LOGI("In function BuildIpHeader");
+	
 	jboolean result = JNI_TRUE;
 	jfieldID fid = NULL;
+	LOGI("In function BuildIpHeader");
 	jclass klass = (*env)->FindClass(env, obj);
 	LOGI("Created klass");
 	if(klass == NULL)	{
 		LOGE("Could not reference the instance of IpHeader");
 		return JNI_FALSE;
 	}
-	fid = (*env)->GetFieldID(env, klass, "ihl", "C");
+	fid = (*env)->GetFieldID(env, klass, "ihl", "S");
 	if(fid == NULL)	{
 	   		result = JNI_FALSE;;
 	    	LOGE("(C) Could not retrieve  ihl field ID");
 	    	return result;
-	    	
 	    }
 	    else  {
-	    	jchar value = (*env)->GetCharField(env, klass, fid);
-	    	ip->ihl = value;
+	      unsigned short* value = (unsigned short*)(*env)->GetShortField(env, klass, fid);
+	    	ip->ihl = *value;
 	    	LOGI("Set ihl value to %i", ip->ihl);
 	    }
 	    /*
