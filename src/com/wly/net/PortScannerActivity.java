@@ -43,7 +43,7 @@ public class PortScannerActivity extends FragmentActivity
 	static String ipAddress = null;
 	static List<Integer> portList = new ArrayList<Integer>();
 	public static List<Integer> getPortList() { return portList; }
-    static IpHeader ip = new IpHeader(new Byte((byte) 5).byteValue(), new Byte((byte) 4).byteValue(), new Byte((byte) 0).byteValue(), new Byte((byte) 0).byteValue(), new Short((short) 0).shortValue(), new Short((short) 0).shortValue(), new Short((short) 0).shortValue(), 0f, 0f);
+	static IpHeader ip = new IpHeader((char)5, (char)4, (char)0, (char)0, (char)0, (short)0, (short)0, (short)0, 0.0, 0.0);
 	/** Called when the activity is first created. */
     @Override
     public void onCreate(Bundle savedInstanceState) {
@@ -91,10 +91,9 @@ public class PortScannerActivity extends FragmentActivity
 		     case R.id.scan_action:
 		        Toast.makeText(this, "Scan Clicked", Toast.LENGTH_SHORT).show();
 		        try	{
-					//Thread.sleep(30 * 1000);
-					@SuppressWarnings("unused")
-					boolean success = buildIpHeader(ip);
-				}
+								@SuppressWarnings("unused")
+								boolean success = buildIpHeader(ip);
+						}
 				catch(Exception e) {
 					e.printStackTrace();
 				}
@@ -122,7 +121,7 @@ public class PortScannerActivity extends FragmentActivity
             // If article frag is available, we're in two-pane layout...
 
             // Call a method in the ArticleFragment to update its content
-        	portInfoFrag.updateArticleView(position);
+        	portInfoFrag.updatePortInfo(position);
 
         } else {
             // If the frag is not available, we're in the one-pane layout and must swap frags...

@@ -14,6 +14,8 @@
  * limitations under the License.
  *
  */
+ #define NULL ((void *) 0)
+ 
 #if (BYTE_ORDER == LITTLE_ENDIAN)
   #define __LITTLE_ENDIAN_BITFIELD
 #elif (BYTE_ORDER == BIG_ENDIAN)
@@ -34,8 +36,6 @@
 #include <android/api-level.h>
 #include <android/log.h>
 #include <android_native_app_glue.h>
-
-#include "Packets.h"
 //END_INCLUDE(all)
 
 #define LOGI(...) ((void)__android_log_print(ANDROID_LOG_INFO, "PortScannerActivity", __VA_ARGS__))
@@ -47,59 +47,46 @@
 char buffer[PACKET_LEN];
 struct iphdr* ip = (struct iphdr*)buffer;
 
-
-JNIEXPORT jint JNICALL JNI_OnLoad(JavaVM *vm, void *reserved)	{
-	LOGI("Loaded the library");
-
-	return JNI_VERSION_1_4;
-}
-
 // IP Header functions
-JNIEXPORT jboolean JNICALL Java_com_wly_net_PortScannerActivity_buildIpHeader
+static jboolean BuildIpHeader
   (JNIEnv* env, jobject thiz, jobject obj) {
 	jboolean result = JNI_TRUE;
 	jfieldID fid = 0;
-	jclass ipCls = (*env)->GetObjectClass(env, obj);
-	if (ipCls == 0) {
-	    	result = JNI_FALSE;
-	    	LOGE("(C) Could not retrieve IpHeader instance");
-	    	return result;
-	  }
 	    
-	   	fid = (*env)->GetFieldID(env, ipCls, "ihl", "B");
-	   	if(fid == 0)	{
+	fid = (*env)->GetFieldID(env, obj, "ihl", "B");
+	if(fid == NULL)	{
 	   		result = JNI_FALSE;;
-	    	LOGE("(C) Could not retrieve ip  ihl field");
+	    	LOGE("(C) Could not retrieve  ihl field");
 	    	return result;
 	    }
 	    else  {
-	    	jbyte value = (*env)->GetByteField(env, ipCls, fid);
+	    	jchar value = (*env)->GetByteField(env, obj, fid);
 	    	ip->ihl = value;
-	    	LOGI("Set ip class ihl value to %i", ip->ihl);
+	    	LOGI("Set ihl value to %i", ip->ihl);
 	    }
 	    
-	    fid = (*env)->GetFieldID(env, ipCls, "version", "B");
-	    if(fid == 0)	{
+	    fid = (*env)->GetFieldID(env, obj, "version", "B");
+	    if(fid == NULL)	{
 	   		result = JNI_FALSE;
-	    	LOGE("(C) Could not retrieve ip   version  field");
+	    	LOGE("(C) Could not retrieve version  field");
 	    	return result;
 	    }
 	    else  {
-	    	jbyte value = (*env)->GetByteField(env, ipCls, fid);
+	    	jchar value = (*env)->GetByteField(env, obj, fid);
 	    	ip->version = value;
-	    	LOGI("Set ip class version value to %i", ip->version);
+	    	LOGI("Set version value to %i", ip->version);
 	    }
 	  
-	    fid = (*env)->GetFieldID(env, ipCls, "tos", "B");
-	    if(fid == 0)	{
+	    fid = (*env)->GetFieldID(env, obj, "tos", "B");
+	    if(fid == NULL)	{
 	   		result = JNI_FALSE;
 	    	LOGE("(C) Could not retrieve tos field");
 	    	return result;
 	    }
 	    else  {
-	    	jbyte value = (*env)->GetByteField(env, ipCls, fid);
+	    	jchar value = (*env)->GetByteField(env, obj, fid);
 	    	ip->tos = value;
-	    	LOGI("Set ip class tos value to %i", ip->tos);
+	    	LOGI("Set tos value to %i", ip->tos);
 	    }
 	    /*
 	    ip->tos = (*env)->GetByteField(env, ipCls, fid);
@@ -120,23 +107,22 @@ JNIEXPORT jboolean JNICALL Java_com_wly_net_PortScannerActivity_buildIpHeader
 }
 
 // TCP Header functions
-JNIEXPORT jboolean JNICALL  Java_com_wly_net_TcpHeader_buildTcpHeader
+static jboolean BuildTcpHeader
   (JNIEnv* env, jobject thiz, jobject obj)	{
 	jboolean result = JNI_TRUE;
-	jclass tcpCls = 0;
 
 	return result;
 }
 
-// Send packet
-JNIEXPORT  jboolean JNICALL  Java_com_wly_net_PortScannerActivity_sendPacket
+// Send packeto
+static jboolean SendPacket
   (JNIEnv* env, jobject thiz)	{
 	jboolean result = JNI_TRUE;
 
 	return result;
 }
 // Compute packet checksum value
-JNIEXPORT jlong JNICALL Java_com_wly_net_PortScannerActivity_computeChecksum
+static jlong ComputeCheckSum
   (JNIEnv* env, jobject thiz, jint nwords)	{
   unsigned long sum = 0;
   unsigned short* buf = (unsigned short*)buffer;
@@ -147,41 +133,44 @@ JNIEXPORT jlong JNICALL Java_com_wly_net_PortScannerActivity_computeChecksum
 	}
 	return (long)(~sum);
 }
-JNIEXPORT jint JNICALL JNI_OnLoad(Java_VM* vm, void* reserved)	{
+JNIEXPORT jint JNICALL JNI_OnLoad(JavaVM* vm, void* reserved)	{
 	LOGI("Executing JNI_OnLoad");
 	// Checks JNI version
 	JNIEnv *env;
-	jint onLoad_err = -1;
-	jclass k;
+	jclass thiz;
 	static const char* const strClassName="com/wly/net/PortScannerActivity";
-	JavaVMInitArgs vm_args;
-	if(JNI_GetDefaultJavaVMInitArgs(vm_args) == NULL)  {
-		LOGE("Get VM args failed");
-		return onLoad_err;
-	}
+	
 
 	// Checks JNI version
-    if((*vm)->GetEnv(vm, (void**) &env, vm_args.version) != JNI_OK){
+    if((*vm)->GetEnv(vm, (void**) &env, JNI_VERSION_1_6) != JNI_OK){
         LOGE("JNI Check failure");
-        return onLoad_err;
+        return JNI_ERR;
     }
     // Checks if environment is null
     if (env == NULL) {
         LOGE("Env is NULL");
-        return onLoad_err;
+        return JNI_ERR;
     }
-    k = (*env)->FindClass(env, strClassName1);
-    if(k == NULL){
+    thiz = (*env)->FindClass(env, strClassName);
+    if(thiz == NULL){
         LOGE("Find Class returns NULL");
-        return onLoad_err;
+        return JNI_ERR;
     }
+    
+    static JNINativeMethod methods[] = { 
+    {"sendPacket", "()Z", (void *)&SendPacket},
+    {"computeCheckSum", "(I)J", (void *)&ComputeCheckSum}, 
+    {"buildIpHeader", "(Lcom/wly/net/IpHeader)Z", (void *)&BuildIpHeader}, 
+    {"buildTcpHeader", "(Lcom/wly/net/TcpHeader)Z", (void *)&BuildTcpHeader}, 
+    };
+    
     if ((*env)->RegisterNatives(env, k, methods, sizeof(methods)/sizeof(methods[0])) != JNI_OK){
         LOGE("Method registration failure");
-        return onLoad_err;
+        return JNI_ERR;
     }
-
+		
     LOGI("Successfully executed JNI_onLoad");
-    return vm_args.version;
+    return JNI_VERSION_1_6;
 
 }
 

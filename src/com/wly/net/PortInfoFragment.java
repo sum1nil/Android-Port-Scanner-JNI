@@ -52,14 +52,14 @@ public class PortInfoFragment extends Fragment {
         Bundle args = getArguments();
         if (args != null) {
             // Set article based on argument passed in
-            updateArticleView(args.getInt(ARG_POSITION));
+            updatePortInfo(args.getInt(ARG_POSITION));
         } else if (mCurrentPosition != -1) {
             // Set article based on saved instance state defined during onCreateView
-            updateArticleView(mCurrentPosition);
+            updatePortInfo(mCurrentPosition);
         }
     }
 
-    public void updateArticleView(int position) {
+    public void updatePortInfo(int position) {
         TextView article = (TextView) getActivity().findViewById(R.id.port_info);
         article.setText(Ipsum.Articles[position]);
         mCurrentPosition = position;
