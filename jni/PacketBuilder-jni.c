@@ -50,9 +50,10 @@ struct iphdr* ip = (struct iphdr*)buffer;
 // IP Header functions
 static jboolean BuildIpHeader
   (JNIEnv* env, jobject thiz, jobject obj) {
+	LOGI("In function BuildIpHeader");
 	jboolean result = JNI_TRUE;
 	jfieldID fid = 0;
-	    
+	jclass =
 	fid = (*env)->GetFieldID(env, obj, "ihl", "B");
 	if(fid == NULL)	{
 	   		result = JNI_FALSE;;
@@ -142,7 +143,7 @@ JNIEXPORT jint JNICALL JNI_OnLoad(JavaVM* vm, void* reserved)	{
 	
 
 	// Checks JNI version
-    if((*vm)->GetEnv(vm, (void**) &env, JNI_VERSION_1_6) != JNI_OK){
+    if((*vm)->GetEnv(vm, (void**) &env, JNI_VERSION_1_2) != JNI_OK){
         LOGE("JNI Check failure");
         return JNI_ERR;
     }
@@ -160,17 +161,19 @@ JNIEXPORT jint JNICALL JNI_OnLoad(JavaVM* vm, void* reserved)	{
     static JNINativeMethod methods[] = { 
     {"sendPacket", "()Z", (void *)&SendPacket},
     {"computeCheckSum", "(I)J", (void *)&ComputeCheckSum}, 
-    {"buildIpHeader", "(Lcom/wly/net/IpHeader)Z", (void *)&BuildIpHeader}, 
-    {"buildTcpHeader", "(Lcom/wly/net/TcpHeader)Z", (void *)&BuildTcpHeader}, 
+    {"buildIpHeader", "(Lcom/wly/net/IpHeader;)Z", (void *)&BuildIpHeader},
+    {"buildTcpHeader", "(Lcom/wly/net/TcpHeader;)Z", (void *)&BuildTcpHeader}
     };
     
-    if ((*env)->RegisterNatives(env, k, methods, sizeof(methods)/sizeof(methods[0])) != JNI_OK){
+    if ((*env)->RegisterNatives(env, thiz, methods, sizeof(methods)/sizeof(methods[0])) != JNI_OK){
         LOGE("Method registration failure");
         return JNI_ERR;
     }
+    else
+    	LOGI("Method registration succeeded");
 		
     LOGI("Successfully executed JNI_onLoad");
-    return JNI_VERSION_1_6;
+    return JNI_VERSION_1_2;
 
 }
 

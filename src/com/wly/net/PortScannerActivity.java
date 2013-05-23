@@ -34,7 +34,7 @@ public class PortScannerActivity extends FragmentActivity
 	
 	// JNI library methods
 	public native boolean sendPacket();
-	public native long computeChecksum(int nwords);
+	public native long computeCheckSum(int nwords);
 	public native boolean buildIpHeader(IpHeader ipHeader);
 	public native boolean buildTcpHeader(TcpHeader tcpHeader);
 
