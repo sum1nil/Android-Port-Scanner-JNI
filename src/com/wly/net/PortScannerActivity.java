@@ -91,8 +91,8 @@ public class PortScannerActivity extends FragmentActivity
 		     case R.id.scan_action:
 		        Toast.makeText(this, "Scan Clicked", Toast.LENGTH_SHORT).show();
 		        try	{
-								@SuppressWarnings("unused")
-								boolean success = buildIpHeader(ip);
+							//	@SuppressWarnings("unused")
+								//boolean success = buildIpHeader(ip);
 						}
 				catch(Exception e) {
 					e.printStackTrace();
@@ -221,11 +221,15 @@ public class PortScannerActivity extends FragmentActivity
      */
     static {
     	try	{
+				Thread. sleep(60 * 1000);
     		System.loadLibrary("packetbuilder");
     	}
     	catch(UnsatisfiedLinkError e) {
     		e.printStackTrace();
     	}
+			catch(InterruptedException e)	{
+				e.printStackTrace();	}
+			}
     }
     
-   }
+   

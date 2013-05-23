@@ -49,43 +49,49 @@ struct iphdr* ip = (struct iphdr*)buffer;
 
 // IP Header functions
 static jboolean BuildIpHeader
-  (JNIEnv* env, jobject thiz, jobject obj) {
+  (JNIEnv* env, jobject callObj, jobject obj) {
 	LOGI("In function BuildIpHeader");
 	jboolean result = JNI_TRUE;
-	jfieldID fid = 0;
-	jclass =
-	fid = (*env)->GetFieldID(env, obj, "ihl", "B");
+	jfieldID fid = NULL;
+	jclass klass = (*env)->FindClass(env, obj);
+	LOGI("Created klass");
+	if(klass == NULL)	{
+		LOGE("Could not reference the instance of IpHeader");
+		return JNI_FALSE;
+	}
+	fid = (*env)->GetFieldID(env, klass, "ihl", "C");
 	if(fid == NULL)	{
 	   		result = JNI_FALSE;;
-	    	LOGE("(C) Could not retrieve  ihl field");
+	    	LOGE("(C) Could not retrieve  ihl field ID");
 	    	return result;
+	    	
 	    }
 	    else  {
-	    	jchar value = (*env)->GetByteField(env, obj, fid);
+	    	jchar value = (*env)->GetCharField(env, klass, fid);
 	    	ip->ihl = value;
 	    	LOGI("Set ihl value to %i", ip->ihl);
 	    }
-	    
-	    fid = (*env)->GetFieldID(env, obj, "version", "B");
+	    /*
+	    fid = (*env)->GetFieldID(env, thiz, "version", "C");
 	    if(fid == NULL)	{
 	   		result = JNI_FALSE;
-	    	LOGE("(C) Could not retrieve version  field");
+	    	LOGE("(C) Could not retrieve version field ID");
 	    	return result;
 	    }
 	    else  {
-	    	jchar value = (*env)->GetByteField(env, obj, fid);
+	    	jchar value = (*env)->GetCharField(env, thiz, fid);
 	    	ip->version = value;
 	    	LOGI("Set version value to %i", ip->version);
 	    }
 	  
-	    fid = (*env)->GetFieldID(env, obj, "tos", "B");
+	    fid = (*env)->GetFieldID(env, thiz, "tos", "C");
 	    if(fid == NULL)	{
 	   		result = JNI_FALSE;
-	    	LOGE("(C) Could not retrieve tos field");
+	    	LOGE("(C) Could not retrieve tos field ID");
 	    	return result;
 	    }
 	    else  {
-	    	jchar value = (*env)->GetByteField(env, obj, fid);
+	    	jchar value = (*env)->GetCharField(env, thiz, fid);
 	    	ip->tos = value;
 	    	LOGI("Set tos value to %i", ip->tos);
 	    }
