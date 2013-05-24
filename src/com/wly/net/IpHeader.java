@@ -9,8 +9,8 @@ public class IpHeader
 					this.ihl = ihl;
 					this.version = version;
 					this.tos = tos;
-  				this.ttl = ttl;
-          this.check = check;
+					this.ttl = ttl;
+					this.check = check;
 					this.id = id;
 					this.frag_off = frag_off;
 					this.tot_len = tot_len;
@@ -40,7 +40,7 @@ public class IpHeader
 
 
   	public  short getTotalLength(){ return tot_len; }
-		public  void setTotalLength(short totu_len){ this.tot_len = tot_len; }
+		public  void setTotalLength(short tot_len){ this.tot_len = tot_len; }
   
   	public  short getId(){ return id; }
 		public  void setId(short id){ this.id = id; }

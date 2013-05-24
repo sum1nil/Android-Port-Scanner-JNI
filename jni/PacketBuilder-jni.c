@@ -54,12 +54,13 @@ static jboolean BuildIpHeader
 	jboolean result = JNI_TRUE;
 	jfieldID fid = NULL;
 	LOGI("In function BuildIpHeader");
-	jclass klass = (*env)->FindClass(env, obj);
+	jclass klass = (*env)->GetObjectClass(env, obj);
 	LOGI("Created klass");
 	if(klass == NULL)	{
 		LOGE("Could not reference the instance of IpHeader");
 		return JNI_FALSE;
 	}
+
 	fid = (*env)->GetFieldID(env, klass, "ihl", "S");
 	if(fid == NULL)	{
 	   		result = JNI_FALSE;;
@@ -67,55 +68,118 @@ static jboolean BuildIpHeader
 	    	return result;
 	    }
 	    else  {
-	      unsigned short* value = (unsigned short*)(*env)->GetShortField(env, klass, fid);
-	    	ip->ihl = *value;
+	    	short value =  (*env)->GetShortField(env, obj, fid);
+	    	ip->ihl = value;
 	    	LOGI("Set ihl value to %i", ip->ihl);
 	    }
-	    /*
-	    fid = (*env)->GetFieldID(env, thiz, "version", "C");
+
+	    fid = (*env)->GetFieldID(env, klass, "version", "S");
 	    if(fid == NULL)	{
 	   		result = JNI_FALSE;
 	    	LOGE("(C) Could not retrieve version field ID");
 	    	return result;
 	    }
 	    else  {
-	    	jchar value = (*env)->GetCharField(env, thiz, fid);
+	    	short value = (*env)->GetShortField(env, obj, fid);
 	    	ip->version = value;
 	    	LOGI("Set version value to %i", ip->version);
 	    }
-	  
-	    fid = (*env)->GetFieldID(env, thiz, "tos", "C");
+
+	    fid = (*env)->GetFieldID(env, klass, "tos", "S");
 	    if(fid == NULL)	{
 	   		result = JNI_FALSE;
 	    	LOGE("(C) Could not retrieve tos field ID");
 	    	return result;
 	    }
 	    else  {
-	    	jchar value = (*env)->GetCharField(env, thiz, fid);
+	    	short value = (*env)->GetCharField(env, obj, fid);
 	    	ip->tos = value;
 	    	LOGI("Set tos value to %i", ip->tos);
 	    }
-	    /*
-	    ip->tos = (*env)->GetByteField(env, ipCls, fid);
-	    fid = (*env)->GetFieldID(env, ipCls, "ttl", "B");
-	    ip->ttl = (*env)->GetByteField(env, ipCls, fid);
-	    fid = (*env)->GetFieldID(env,ipCls, "check", "S");
-	    ip->check = (*env)->GetShortField(env, ipCls, fid);
-	    fid = (*env)->GetFieldID(env,ipCls, "tot_len", "S");
-	    ip->tot_len = (*env)->GetShortField(env, ipCls, fid);
-	    fid = (*env)->GetFieldID(env,ipCls, "id", "S");
-	    ip->id = (*env)->GetShortField(env, ipCls, fid);
-	    fid = (*env)->GetFieldID(env, ipCls, "saddr", "F");
-	    ip->saddr = (*env)->GetFloatField(env, ipCls, fid);
-	    fid = (*env)->GetFieldID(env, ipCls, "daddr", "F");
-	    ip->daddr = (*env)->GetFloatField(env, ipCls, fid);
-		*/
+
+	    fid = (*env)->GetFieldID(env, klass, "ttl", "S");
+	    if(fid == NULL)	{
+	    	   		result = JNI_FALSE;
+	    	    	LOGE("(C) Could not retrieve tos field ID");
+	    	    	return result;
+	    	    }
+	    	    else  {
+	    	    	short value = (*env)->GetCharField(env, obj, fid);
+	    	    	ip->ttl = value;
+	    	    	LOGI("Set ttl value to %i", ip->ttl);
+	    	    }
+	    fid = (*env)->GetFieldID(env, klass, "check", "S");
+	    if(fid == NULL)	{
+	    	   		result = JNI_FALSE;
+	    	    	LOGE("(C) Could not retrieve check field ID");
+	    	    	return result;
+	    	    }
+	    	    else  {
+	    	    	short value = (*env)->GetCharField(env, obj, fid);
+	    	    	ip->check = value;
+	    	    	LOGI("Set check value to %i", ip->check);
+	    	    }
+	    fid = (*env)->GetFieldID(env, klass, "tot_len", "S");
+	    if(fid == NULL)	{
+	    	   		result = JNI_FALSE;
+	    	    	LOGE("(C) Could not retrieve tot_len field ID");
+	    	    	return result;
+	    	    }
+	    	    else  {
+	    	    	short value = (*env)->GetCharField(env, obj, fid);
+	    	    	ip->tot_len = value;
+	    	    	LOGI("Set tot_len value to %i", ip->tot_len);
+	    	    }
+	    fid = (*env)->GetFieldID(env, klass, "id", "S");
+	    if(fid == NULL)	{
+	    	   		result = JNI_FALSE;
+	    	    	LOGE("(C) Could not retrieve id field ID");
+	    	    	return result;
+	    	    }
+	    	    else  {
+	    	    	short value = (*env)->GetCharField(env, obj, fid);
+	    	    	ip->id = value;
+	    	    	LOGI("Set id value to %i", ip->id);
+	    	    }
+	    fid = (*env)->GetFieldID(env, klass, "frag_off", "S");
+	    if(fid == NULL)	{
+	    	   		result = JNI_FALSE;
+	    	    	LOGE("(C) Could not retrieve frag_off field ID");
+	    	    	return result;
+	    	    }
+	    	    else  {
+	    	    	short value = (*env)->GetCharField(env, obj, fid);
+	    	    	ip->frag_off = value;
+	    	    	LOGI("Set frag_off value to %i", ip->frag_off);
+	    	    }
+	    fid = (*env)->GetFieldID(env, klass, "saddr", "D");
+	    if(fid == NULL)	{
+	    	    	   		result = JNI_FALSE;
+	    	    	    	LOGE("(C) Could not retrieve saddr field ID");
+	    	    	    	return result;
+	    	    	    }
+	    	    	    else  {
+	    	    	    	double value = (*env)->GetDoubleField(env, obj, fid);
+	    	    	    	ip->saddr = value;
+	    	    	    	LOGI("Set saddr value to %i", ip->saddr);
+	    	    	    }
+	    fid = (*env)->GetFieldID(env, klass, "daddr", "D");
+	    if(fid == NULL)	{
+	    	    	    	   		result = JNI_FALSE;
+	    	    	    	    	LOGE("(C) Could not retrieve daddr field ID");
+	    	    	    	    	return result;
+	    	    	    	    }
+	    	    	    	    else  {
+	    	    	    	    	double value = (*env)->GetDoubleField(env, obj, fid);
+	    	    	    	    	ip->daddr = value;
+	    	    	    	    	LOGI("Set daddr value to %i", ip->daddr);
+	    	    	    	    }
 	    return result;
 }
 
 // TCP Header functions
 static jboolean BuildTcpHeader
-  (JNIEnv* env, jobject thiz, jobject obj)	{
+  (JNIEnv* env, jobject callObj, jobject obj)	{
 	jboolean result = JNI_TRUE;
 
 	return result;

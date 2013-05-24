@@ -224,16 +224,17 @@ public class PortScannerActivity extends FragmentActivity
      */
     static {
     	try	{
-				Thread. sleep(45 * 1000);
-    		System.loadLibrary("packetbuilder");
+				//Thread. sleep(45 * 1000);
+				System.loadLibrary("packetbuilder");
     	}
     	catch(UnsatisfiedLinkError e) {
     		e.printStackTrace();
     	}
-			catch(InterruptedException e)	{
-				e.printStackTrace();	}
-			}
+			//catch(InterruptedException e)	{
+			//	e.printStackTrace();	}
+			//}
     
 	}
+}
     
    

@@ -3,8 +3,8 @@ package com.wly.net;
 public class TcpHeader
 {
 
- public TcpHeader(short source, short dest, short doff, short res1, short cwr, short ece, short urg, short ack,
- 		short psh, short rst, short syn, short fin, short window, short check, short urg_ptr, float seq, float ack_seq) {
+ public TcpHeader(int source, int dest, int doff, int res1, int cwr, int ece, int urg, int ack,
+ 		int psh, int rst, int syn, int fin, int window, int check, int urg_ptr, double seq, double ack_seq) {
 				this.source = source;
 				this.dest = dest;
 				this.doff = doff;
@@ -25,59 +25,59 @@ public class TcpHeader
  }
  
  
- private short source, dest, doff, res1, cwr, ece, urg, ack, psh, rst, syn, fin,
+ private int source, dest, doff, res1, cwr, ece, urg, ack, psh, rst, syn, fin,
  	window, check, urg_ptr;
-		public  short getSource(){ return source; }
-		public  void setSource(short source){ this.source = source; }
+		public  int getSource(){ return source; }
+		public  void setSource(int source){ this.source = source; }
 
-		public  short getDest(){ return dest; }
-		public  void setDest(short dest){ this.dest = dest; }
+		public  int getDest(){ return dest; }
+		public  void setDest(int dest){ this.dest = dest; }
 
-		public  short getDoff(){ return doff; }
-		public  void setDoff(short doff){ this.doff = doff; }
+		public  int getDoff(){ return doff; }
+		public  void setDoff(int doff){ this.doff = doff; }
 
-		public  short getRes1(){ return res1; }
-		public  void setRes1(short res1){ this.res1 = res1; }
+		public  int getRes1(){ return res1; }
+		public  void setRes1(int res1){ this.res1 = res1; }
 
-		public  short getCwr(){ return cwr; }
-		public  void setCwr(short cwr){ this.cwr = cwr; }
+		public  int getCwr(){ return cwr; }
+		public  void setCwr(int cwr){ this.cwr = cwr; }
 
-		public  short getEce(){ return ece; }
-		public  void setEce(short ece){ this.ece = ece; }
+		public  int getEce(){ return ece; }
+		public  void setEce(int ece){ this.ece = ece; }
 
-		public  short getUrg(){ return urg; }
-		public  void setUrg(short urg){ this.urg = urg; }
+		public  int getUrg(){ return urg; }
+		public  void setUrg(int urg){ this.urg = urg; }
 
-		public  short getAck(){ return ack; }
-		public  void setAck(short ack){ this.ack = ack; }
+		public  int getAck(){ return ack; }
+		public  void setAck(int ack){ this.ack = ack; }
 
-		public  short getPsh(){ return psh; }
-		public  void setPsh(short psh){ this.psh = psh; }
+		public  int getPsh(){ return psh; }
+		public  void setPsh(int psh){ this.psh = psh; }
 
-		public  short getRst(){ return rst; }
-		public  void setRst(short rst){ this.rst = rst; }
+		public  int getRst(){ return rst; }
+		public  void setRst(int rst){ this.rst = rst; }
 
-		public  short getSyn(){ return syn; }
-		public  void setSyn(short syn){ this.syn = syn; } 
+		public  int getSyn(){ return syn; }
+		public  void setSyn(int syn){ this.syn = syn; } 
 
-		public  short getFin(){ return fin; }
-		public  void setFin(short fin){ this.fin = fin; }
+		public  int getFin(){ return fin; }
+		public  void setFin(int fin){ this.fin = fin; }
 
-		public  short getWindow(){ return window; }
-		public  void setWindow(short window){ this.window = window; }
+		public  int getWindow(){ return window; }
+		public  void setWindow(int window){ this.window = window; }
 
-		public  short getCheck(){ return check; }
-		public  void setCheck(short check){ this.check = check; }
+		public  int getCheck(){ return check; }
+		public  void setCheck(int check){ this.check = check; }
 		
-		public  short getUrgPtr(){ return urg_ptr; }
-		public  void setUrgPtr(short urg_ptr){ this.urg_ptr = urg_ptr; }
+		public  int getUrgPtr(){ return urg_ptr; }
+		public  void setUrgPtr(int urg_ptr){ this.urg_ptr = urg_ptr; }
 		
-		private float seq, ack_seq;
-		public  float getSeq(){ return seq; }
-		public  void setSeq(float seq){ this.seq = seq; }
+		private double seq, ack_seq;
+		public  double getSeq(){ return seq; }
+		public  void setSeq(double seq){ this.seq = seq; }
 
-		public  float getAckSeq(){ return ack_seq; };
-		public  void setAckSeq(float ack_seq){ this.ack_seq = ack_seq; };
+		public  double getAckSeq(){ return ack_seq; };
+		public  void setAckSeq(double ack_seq){ this.ack_seq = ack_seq; };
 
 }
  
