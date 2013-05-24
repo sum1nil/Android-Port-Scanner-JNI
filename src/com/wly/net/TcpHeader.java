@@ -3,8 +3,8 @@ package com.wly.net;
 public class TcpHeader
 {
 
- public TcpHeader(int source, int dest, int doff, int res1, int cwr, int ece, int urg, int ack,
- 		int psh, int rst, int syn, int fin, int window, int check, int urg_ptr, double seq, double ack_seq) {
+ public TcpHeader(char source, char dest, char doff, char res1, char cwr, char ece, char urg, char ack,
+ 		char psh, char rst, char syn, char fin, char window, char check, char urg_ptr, long seq, long ack_seq) {
 				this.source = source;
 				this.dest = dest;
 				this.doff = doff;

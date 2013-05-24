@@ -34,7 +34,7 @@ public class PortScannerActivity extends FragmentActivity
 	
 	// JNI library methods
 	public native boolean sendPacket();
-	public native long computeCheckSum(int nwords);
+	public native long computeTcpCheckSum(int nwords);
 	public native boolean buildIpHeader(IpHeader ipHeader);
 	public native boolean buildTcpHeader(TcpHeader tcpHeader);
 
@@ -43,7 +43,7 @@ public class PortScannerActivity extends FragmentActivity
 	static String ipAddress = null;
 	static List<Integer> portList = new ArrayList<Integer>();
 	public static List<Integer> getPortList() { return portList; }
-	static IpHeader ip = new IpHeader((short)5, (short)4, (short)0,(short)0, (short)0,(short)0,(short)0, (short)0, 0.0, 0.0);
+	static IpHeader ip = new IpHeader((char)5, (char)4, (char)0,(char)0, (char)0, (short)0,(short)0,(short)0, 0, 0, 0);
 	/** Called when the activity is first created. */
     @Override
     public void onCreate(Bundle savedInstanceState) {

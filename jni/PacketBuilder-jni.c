@@ -16,11 +16,7 @@
  */
 #define NULL ((void *) 0)
 
-#if (BYTE_ORDER == LITTLE_ENDIAN)
-#define __LITTLE_ENDIAN_BITFIELD
-#elif (BYTE_ORDER == BIG_ENDIAN)
-#define __BIG_ENDIAN_BITFIELD
-#endif
+
 
 //BEGIN_INCLUDE(all)
 #include <jni.h>
@@ -32,7 +28,11 @@
 #include <sys/socket.h> 
 #include <netinet/ip.h> 
 #include <netinet/tcp.h>
-
+#if (BYTE_ORDER == LITTLE_ENDIAN)
+#define __LITTLE_ENDIAN_BITFIELD
+#elif (BYTE_ORDER == BIG_ENDIAN)
+#define __BIG_ENDIAN_BITFIELD
+#endif
 #include <android/api-level.h>
 #include <android/log.h>
 #include <android_native_app_glue.h>
@@ -41,13 +41,34 @@
 #define LOGI(...) ((void)__android_log_print(ANDROID_LOG_INFO, "PortScannerActivity", __VA_ARGS__))
 #define LOGW(...) ((void)__android_log_print(ANDROID_LOG_WARN, "PortScannerActivity", __VA_ARGS__))
 #define LOGE(...) ((void)__android_log_print(ANDROID_LOG_ERROR, "PortScannerActivity", __VA_ARGS__))
-#define PACKET_LEN  81928
+#define PACKET_LEN  4096
+/*
+struct Packet {
+	struct pseudo_header phdr;
+	struct iphdr iph;
+	struct tcphdr tcph;
+};
+*/
 
+/*
+    96 bit (12 bytes) pseudo header needed for tcp header checksum calculation
+*/
+struct pseudo_header
+{
+    u_int32_t source_address;
+    u_int32_t dest_address;
+    u_int8_t placeholder;
+    u_int8_t protocol;
+    u_int16_t tcp_length;
+};
 // Global references
-char buffer1[PACKET_LEN];
-struct iphdr* ip = (struct iphdr*)buffer1;
-char buffer2[PACKET_LEN];
-struct tcphdr* tcp = (struct tcphder*)buffer2;
+char datagram[PACKET_LEN];
+// IP Header
+struct iphdr* ip = (struct iphdr*)datagram;
+// TCP Header
+struct tcphdr* tcp = (struct tcphdr*)(datagram + sizeof(struct ip));
+struct sockaddr_in s_in;
+struct pseudo_header phdr;
 
 // IP Header functions
 static jboolean BuildIpHeader
@@ -63,14 +84,14 @@ static jboolean BuildIpHeader
 		return JNI_FALSE;
 	}
 
-	fid = (*env)->GetFieldID(env, klass, "ihl", "S");
+	fid = (*env)->GetFieldID(env, klass, "ihl", "C");
 	if(fid == NULL)	{
 		result = JNI_FALSE;;
 		LOGE("(C) Could not retrieve ip ihl field ID");
 		return result;
 	}
 	else  {
-		short value =  (*env)->GetShortField(env, obj, fid);
+		__u8 value =  (*env)->GetCharField(env, obj, fid);
 		ip->ihl = value;
 		LOGI("Set ip ihl value to %i", ip->ihl);
 	}
@@ -82,45 +103,35 @@ static jboolean BuildIpHeader
 		return result;
 	}
 	else  {
-		short value = (*env)->GetShortField(env, obj, fid);
+		__u8 value = (*env)->GetCharField(env, obj, fid);
 		ip->version = value;
 		LOGI("Set ip version value to %i", ip->version);
 	}
 
-	fid = (*env)->GetFieldID(env, klass, "tos", "S");
+	fid = (*env)->GetFieldID(env, klass, "tos", "C");
 	if(fid == NULL)	{
 		result = JNI_FALSE;
 		LOGE("(C) Could not retrieve ip tos field ID");
 		return result;
 	}
 	else  {
-		short value = (*env)->GetCharField(env, obj, fid);
+		__u8 value = (*env)->GetCharField(env, obj, fid);
 		ip->tos = value;
 		LOGI("Set ip tos value to %i", ip->tos);
 	}
 
-	fid = (*env)->GetFieldID(env, klass, "ttl", "S");
+	fid = (*env)->GetFieldID(env, klass, "ttl", "C");
 	if(fid == NULL)	{
 		result = JNI_FALSE;
 		LOGE("(C) Could not retrieve ip tos field ID");
 		return result;
 	}
 	else  {
-		short value = (*env)->GetCharField(env, obj, fid);
+		__u8 value = (*env)->GetCharField(env, obj, fid);
 		ip->ttl = value;
 		LOGI("Set ip ttl value to %i", ip->ttl);
 	}
-	fid = (*env)->GetFieldID(env, klass, "check", "S");
-	if(fid == NULL)	{
-		result = JNI_FALSE;
-		LOGE("(C) Could not retrieve ip check field ID");
-		return result;
-	}
-	else  {
-		short value = (*env)->GetCharField(env, obj, fid);
-		ip->check = value;
-		LOGI("Set ip check value to %i", ip->check);
-	}
+
 	fid = (*env)->GetFieldID(env, klass, "tot_len", "S");
 	if(fid == NULL)	{
 		result = JNI_FALSE;
@@ -128,7 +139,7 @@ static jboolean BuildIpHeader
 		return result;
 	}
 	else  {
-		short value = (*env)->GetCharField(env, obj, fid);
+		__be16 value = (*env)->GetShortField(env, obj, fid);
 		ip->tot_len = value;
 		LOGI("Set ip tot_len value to %i", ip->tot_len);
 	}
@@ -139,7 +150,7 @@ static jboolean BuildIpHeader
 		return result;
 	}
 	else  {
-		short value = (*env)->GetCharField(env, obj, fid);
+		__be16 value = (*env)->GetShortField(env, obj, fid);
 		ip->id = value;
 		LOGI("Set ip id value to %i", ip->id);
 	}
@@ -150,29 +161,42 @@ static jboolean BuildIpHeader
 		return result;
 	}
 	else  {
-		short value = (*env)->GetCharField(env, obj, fid);
+		__be16 value = (*env)->GetShortField(env, obj, fid);
 		ip->frag_off = value;
 		LOGI("Set ip frag_off value to %i", ip->frag_off);
 	}
-	fid = (*env)->GetFieldID(env, klass, "saddr", "D");
+
+	fid = (*env)->GetFieldID(env, klass, "check", "I");
+	if(fid == NULL)	{
+		result = JNI_FALSE;
+		LOGE("(C) Could not retrieve ip check field ID");
+		return result;
+	}
+	else  {
+		__u16 value = (*env)->GetIntField(env, obj, fid);
+		ip->check = value;
+		LOGI("Set ip check value to %i", ip->check);
+	}
+
+	fid = (*env)->GetFieldID(env, klass, "saddr", "I");
 	if(fid == NULL)	{
 		result = JNI_FALSE;
 		LOGE("(C) Could not retrieve ip saddr field ID");
 		return result;
 	}
 	else  {
-		double value = (*env)->GetDoubleField(env, obj, fid);
+		__be32 value = (*env)->GetIntField(env, obj, fid);
 		ip->saddr = value;
 		LOGI("Set ip saddr value to %i", ip->saddr);
 	}
-	fid = (*env)->GetFieldID(env, klass, "daddr", "D");
+	fid = (*env)->GetFieldID(env, klass, "daddr", "I");
 	if(fid == NULL)	{
 		result = JNI_FALSE;
 		LOGE("(C) Could not retrieve ip daddr field ID");
 		return result;
 	}
 	else  {
-		double value = (*env)->GetDoubleField(env, obj, fid);
+		__be32 value = (*env)->GetIntField(env, obj, fid);
 		ip->daddr = value;
 		LOGI("Set ip daddr value to %i", ip->daddr);
 	}
@@ -187,225 +211,259 @@ static jboolean BuildTcpHeader
 	LOGI("In function BuildTcpHeader");
 	jclass klass = (*env)->GetObjectClass(env, obj);
 	LOGI("Created tcp klass");
+
 	if(klass == NULL)	{
 		LOGE("Could not reference the instance of TcpHeader");
 		return JNI_FALSE;
 	}
 
-	fid = (*env)->GetFieldID(env, klass, "source", "I");
+	fid = (*env)->GetFieldID(env, klass, "source", "C");
 	if(fid == NULL)	{
 		result = JNI_FALSE;;
 		LOGE("(C) Could not retrieve tcp source field ID");
 		return result;
 	}
 	else  {
-		int value =  (*env)->GetIntField(env, obj, fid);
+		unsigned short value =  (*env)->GetCharField(env, obj, fid);
 		tcp->source = value;
 		LOGI("Set tcp source value to %i", tcp->source);
 	}
 
-	fid = (*env)->GetFieldID(env, klass, "dest", "I");
+	fid = (*env)->GetFieldID(env, klass, "dest", "C");
 	if(fid == NULL)	{
 		result = JNI_FALSE;;
 		LOGE("(C) Could not retrieve tcp dest field ID");
 		return result;
 	}
 	else  {
-		int value =  (*env)->GetIntField(env, obj, fid);
+		unsigned short value =  (*env)->GetCharField(env, obj, fid);
 		tcp->dest = value;
 		LOGI("Set tcp dest value to %i", tcp->dest);
 	}
 
-	fid = (*env)->GetFieldID(env, klass, "doff", "I");
+	fid = (*env)->GetFieldID(env, klass, "doff", "C");
 	if(fid == NULL)	{
 		result = JNI_FALSE;;
 		LOGE("(C) Could not tcp retrieve doff field ID");
 		return result;
 	}
 	else  {
-		int value =  (*env)->GetIntField(env, obj, fid);
+		unsigned short value =  (*env)->GetCharField(env, obj, fid);
 		tcp->doff = value;
 		LOGI("Set tcp doff value to %i", tcp->doff);
 	}
 
-	fid = (*env)->GetFieldID(env, klass, "res1", "I");
+	fid = (*env)->GetFieldID(env, klass, "res1", "C");
 	if(fid == NULL)	{
 		result = JNI_FALSE;;
 		LOGE("(C) Could not retrieve tcp res1 field ID");
 		return result;
 	}
 	else  {
-		int value =  (*env)->GetIntField(env, obj, fid);
+		unsigned short value =  (*env)->GetCharField(env, obj, fid);
 		tcp->res1 = value;
 		LOGI("Set tcp res1 value to %i", tcp->res1);
 	}
 
-	fid = (*env)->GetFieldID(env, klass, "cwr", "I");
+	fid = (*env)->GetFieldID(env, klass, "cwr", "C");
 	if(fid == NULL)	{
 		result = JNI_FALSE;;
 		LOGE("(C) Could not retrieve tcp cwr field ID");
 		return result;
 	}
 	else  {
-		int value =  (*env)->GetIntField(env, obj, fid);
+		unsigned short value =  (*env)->GetCharField(env, obj, fid);
 		tcp->cwr = value;
 		LOGI("Set tcp cwr value to %i", tcp->cwr);
 	}
 
-	fid = (*env)->GetFieldID(env, klass, "ece", "I");
+	fid = (*env)->GetFieldID(env, klass, "ece", "C");
 	if(fid == NULL)	{
 		result = JNI_FALSE;;
 		LOGE("(C) Could not retrieve tcp ece field ID");
 		return result;
 	}
 	else  {
-		int value =  (*env)->GetIntField(env, obj, fid);
+		unsigned short value =  (*env)->GetCharField(env, obj, fid);
 		tcp->ece = value;
 		LOGI("Set tcp ece value to %i", tcp->ece);
 	}
 
-	fid = (*env)->GetFieldID(env, klass, "urg", "I");
+	fid = (*env)->GetFieldID(env, klass, "urg", "C");
 	if(fid == NULL)	{
 		result = JNI_FALSE;;
 		LOGE("(C) Could not retrieve tcp urg field ID");
 		return result;
 	}
 	else  {
-		int value =  (*env)->GetIntField(env, obj, fid);
+		unsigned short value =  (*env)->GetCharField(env, obj, fid);
 		tcp->urg = value;
 		LOGI("Set tcp urg value to %i", tcp->urg);
 	}
 
-	fid = (*env)->GetFieldID(env, klass, "ack", "I");
+	fid = (*env)->GetFieldID(env, klass, "ack", "C");
 	if(fid == NULL)	{
 		result = JNI_FALSE;;
 		LOGE("(C) Could not retrieve tcp ack field ID");
 		return result;
 	}
 	else  {
-		int value =  (*env)->GetIntField(env, obj, fid);
+		unsigned short value =  (*env)->GetCharField(env, obj, fid);
 		tcp->ack = value;
 		LOGI("Set tcp ack value to %i", tcp->ack);
 	}
 
-	fid = (*env)->GetFieldID(env, klass, "psh", "I");
+	fid = (*env)->GetFieldID(env, klass, "psh", "C");
 	if(fid == NULL)	{
 		result = JNI_FALSE;;
 		LOGE("(C) Could not retrieve tcp psh field ID");
 		return result;
 	}
 	else  {
-		int value =  (*env)->GetIntField(env, obj, fid);
+		unsigned short value =  (*env)->GetCharField(env, obj, fid);
 		tcp->psh = value;
 		LOGI("Set tcp psh value to %i", tcp->psh);
 	}
 
-	fid = (*env)->GetFieldID(env, klass, "rst", "I");
+	fid = (*env)->GetFieldID(env, klass, "rst", "C");
 	if(fid == NULL)	{
 		result = JNI_FALSE;;
 		LOGE("(C) Could not retrieve tcp rst field ID");
 		return result;
 	}
 	else  {
-		int value =  (*env)->GetIntField(env, obj, fid);
+		unsigned short value =  (*env)->GetCharField(env, obj, fid);
 		tcp->rst = value;
 		LOGI("Set tcp rst value to %i", tcp->rst);
 	}
 
-	fid = (*env)->GetFieldID(env, klass, "syn", "I");
+	fid = (*env)->GetFieldID(env, klass, "syn", "C");
 	if(fid == NULL)	{
 		result = JNI_FALSE;;
 		LOGE("(C) Could not retrieve tcp syn field ID");
 		return result;
 	}
 	else  {
-		int value =  (*env)->GetIntField(env, obj, fid);
+		__u16 value =  (*env)->GetCharField(env, obj, fid);
 		tcp->syn = value;
 		LOGI("Set tcp syn value to %i", tcp->syn);
 	}
 
-	fid = (*env)->GetFieldID(env, klass, "fin", "I");
+	fid = (*env)->GetFieldID(env, klass, "fin", "C");
 	if(fid == NULL)	{
 		result = JNI_FALSE;;
 		LOGE("(C) Could not retrieve tcp fin field ID");
 		return result;
 	}
 	else  {
-		int value =  (*env)->GetIntField(env, obj, fid);
+		__u16 value =  (*env)->GetCharField(env, obj, fid);
 		tcp->fin = value;
 		LOGI("Set tcp fin value to %i", tcp->fin);
 	}
 
-	fid = (*env)->GetFieldID(env, klass, "window", "I");
+	fid = (*env)->GetFieldID(env, klass, "window", "C");
 	if(fid == NULL)	{
 		result = JNI_FALSE;;
 		LOGE("(C) Could not retrieve tcp window field ID");
 		return result;
 	}
 	else  {
-		int value =  (*env)->GetIntField(env, obj, fid);
+		unsigned short value =  (*env)->GetIntField(env, obj, fid);
 		tcp->window = value;
 		LOGI("Set tcp window value to %i", tcp->window);
 	}
 
-	fid = (*env)->GetFieldID(env, klass, "check", "I");
+	fid = (*env)->GetFieldID(env, klass, "check", "C");
 	if(fid == NULL)	{
 		result = JNI_FALSE;;
 		LOGE("(C) Could not retrieve tcp check field ID");
 		return result;
 	}
 	else  {
-		int value =  (*env)->GetIntField(env, obj, fid);
+		unsigned short value =  (*env)->GetCharField(env, obj, fid);
 		tcp->check = value;
 		LOGI("Set tcp check value to %i", tcp->check);
 	}
-	fid = (*env)->GetFieldID(env, klass, "seq", "I");
+
+	fid = (*env)->GetFieldID(env, klass, "seq", "J");
 	if(fid == NULL)	{
 		result = JNI_FALSE;;
 		LOGE("(C) Could not retrieve tcp seq field ID");
 		return result;
 	}
 	else  {
-		int value =  (*env)->GetDoubleField(env, obj, fid);
+		__u32 value =  (*env)->GetLongField(env, obj, fid);
 		tcp->seq = value;
 		LOGI("Set tcp seq value to %i", tcp->seq);
 	}
 
-		fid = (*env)->GetFieldID(env, klass, "ack_seq", "I");
+		fid = (*env)->GetFieldID(env, klass, "ack_seq", "J");
 		if(fid == NULL)	{
 			result = JNI_FALSE;;
 			LOGE("(C) Could not retrieve tcp ack_seq field ID");
 			return result;
 		}
 		else  {
-			int value =  (*env)->GetDoubleField(env, obj, fid);
+			__u32 value =  (*env)->GetLongField(env, obj, fid);
 			tcp->ack_seq = value;
 			LOGI("Set tcp ack_seq value to %i", tcp->ack_seq);
 		}
-
-	}																																    }																															    }
-	return result;
-}
+		return result;
+	}
 
 // Send packet
 static jboolean SendPacket
 (JNIEnv* env, jobject thiz)	{
 	jboolean result = JNI_TRUE;
+	int s = socket(AF_INET, SOCK_RAW, IPPROTO_TCP);
+
+	int one = 1;
+	const int *val = &one;
+	if (setsockopt (s, IPPROTO_IP, IP_HDRINCL, val, sizeof (one)) < 0)
+	{
+	    LOGE("Error setting IP_HDRINCL. Error number : %d . Error message : %s \n" , errno , strerror(errno));
+	    return JNI_FALSE;
+	}
+    //Datagram to represent the packet
+    char datagram[4096] , source_ip[32] , *data , *pseudogram;
+
+    //zero out the packet buffer
+    memset (datagram, 0, 4096);
+
+	//Data part
+	data = datagram + sizeof(struct iphdr) + sizeof(struct tcphdr);
+	strcpy(data , "ABCDEFGHIJKLMNOPQRSTUVWXYZ");
+
+
 
 	return result;
 }
+
 // Compute packet checksum value
-static jlong ComputeCheckSum
-(JNIEnv* env, jobject thiz, jint nwords)	{
-	unsigned long sum = 0;
-	unsigned short* buf = (unsigned short*)buffer;
-	for(sum=0; nwords>0; nwords--) {
-		sum += *buf++;
-		sum = (sum >> 16) + (sum &0xffff);
-		sum += (sum >> 16);
+static jint ComputeTcpCheckSum
+(JNIEnv* env, jobject thiz, jint nbytes)	{
+	register long sum = 0;
+	unsigned short oddByte;
+	register short answer;
+
+	unsigned short* ptr = (unsigned short*)datagram;
+	while(nbytes > 1)	{
+		sum += *ptr++;
+		nbytes -= 2;
 	}
-	return (long)(~sum);
+	if(nbytes == 1)	{
+		oddByte = 0;
+		*((u_char*)&oddByte)= *(u_char*)ptr;
+		sum += oddByte;
+	}
+
+	sum = (sum>>16) +  (sum & 0xffff);
+	sum = sum + (sum>>16);
+	answer = (short)~sum;
+
+	return answer;
 }
+
 JNIEXPORT jint JNICALL JNI_OnLoad(JavaVM* vm, void* reserved)	{
 	LOGI("Executing JNI_OnLoad");
 	// Checks JNI version
@@ -432,7 +490,7 @@ JNIEXPORT jint JNICALL JNI_OnLoad(JavaVM* vm, void* reserved)	{
 
 	static JNINativeMethod methods[] = {
 			{"sendPacket", "()Z", (void *)&SendPacket},
-			{"computeCheckSum", "(I)J", (void *)&ComputeCheckSum},
+			{"computeTcpCheckSum", "(I)C", (void *)&ComputeTcpCheckSum},
 			{"buildIpHeader", "(Lcom/wly/net/IpHeader;)Z", (void *)&BuildIpHeader},
 			{"buildTcpHeader", "(Lcom/wly/net/TcpHeader;)Z", (void *)&BuildTcpHeader}
 	};
