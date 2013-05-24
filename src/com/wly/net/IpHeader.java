@@ -1,7 +1,7 @@
 package com.wly.net;
 
 // The IP header's structure 
-
+//384 bits
 public class IpHeader
 {
 	public IpHeader(short ihl, short version,  short tos, short ttl, short check, short tot_len,
