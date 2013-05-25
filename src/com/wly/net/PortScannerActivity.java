@@ -18,6 +18,7 @@ package com.wly.net;
 import java.util.ArrayList;
 import java.util.List;
 
+import android.content.Intent;
 import android.os.Bundle;
 import android.support.v4.app.FragmentActivity;
 import android.support.v4.app.FragmentTransaction;
@@ -34,7 +35,7 @@ public class PortScannerActivity extends FragmentActivity
 	
 	// JNI library methods
 	public native boolean sendPacket();
-	public native long computeTcpCheckSum(int nwords);
+	public native short computeCheckSum(int nwords);
 	public native boolean buildIpHeader(IpHeader ipHeader);
 	public native boolean buildTcpHeader(TcpHeader tcpHeader);
 
@@ -88,15 +89,20 @@ public class PortScannerActivity extends FragmentActivity
     public boolean onOptionsItemSelected(MenuItem item) {
 		boolean result = true;
 	      switch (item.getItemId()) {
+	      case R.id.packet_action:
+	    	  Intent ipInfoIntent = new Intent(PortScannerActivity.this, PacketInfoActivity.class);
+	    	  //myIntent.putExtra("key", value); //Optional parameters
+	    	  PortScannerActivity.this.startActivity(ipInfoIntent);
+	    	  break;
 		     case R.id.scan_action:
 		        Toast.makeText(this, "Scan Clicked", Toast.LENGTH_SHORT).show();
 		        try	{
-									//@SuppressWarnings("unused")
-									if(ip == null)
-										Log.d(TAG, "ip is null");
-								  else
-										result = buildIpHeader(ip);
-						}
+					//@SuppressWarnings("unused")
+		        	if(ip == null)
+		        		Log.d(TAG, "ip is null");
+		        	else
+		        		result = buildIpHeader(ip);
+		        	}
 				catch(Exception e) {
 					e.printStackTrace();
 				}

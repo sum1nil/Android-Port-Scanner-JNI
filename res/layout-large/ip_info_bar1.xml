@@ -1,21 +1,94 @@
-<LinearLayouti xmlns:android="http://schemas.android.com/apk/res/android"
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
     android:id="@+id/row1"
 		android:layout_width="fill_parent"
     android:layout_height="wrap_content"
-		android:orientation="horizontal">
+    android:background="@android:color/black"
+		android:orientation="horizontal"
+		android:paddingLeft="40dp">
 		
-		<TextView
-				android:id="@+Id/ihl_label"
+		    <TextView
+				android:id="@+id/ihl"
 				android:layout_width="wrap_content"
 				android:layout_height="wrap_content"
 				android:text="@string/ihl_label"
+				android:layout_marginLeft="25dp"
 				/>
 				
-		<EditText
+		    <EditText
 				android:id="@+id/iph_ihl"
 				android:layout_width="wrap_content"
 				android:layout_height="wrap_content"
-				android:hint="zero_hint"
+				android:hint="@string/zero_hint"
+				android:layout_marginLeft="10dp"
+				android:inputType="number"
 				/>
+		
+       <TextView
+        android:id="@+id/version"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:text="@string/version_label"
+        android:layout_marginLeft="25dp"
+        />
+        
+        <EditText
+        android:id="@+id/iph_version"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:hint="@string/zero_hint"
+        android:layout_marginLeft="10dp"
+        android:inputType="number"
+        />
     
-</LinearLayouti>
+        <TextView
+        android:id="@+id/tos"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:text="@string/tos_label"
+        android:layout_marginLeft="25dp"
+        />
+        
+        <EditText
+        android:id="@+id/iph_tos"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:hint="@string/zero_hint"
+        android:layout_marginLeft="10dp"
+        android:inputType="number"
+        />
+        
+        <TextView
+        android:id="@+id/ttl"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:text="@string/ttl_label"
+        android:layout_marginLeft="25dp"
+        />
+        
+       <EditText
+        android:id="@+id/iph_ttl"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:hint="@string/zero_hint"
+        android:layout_marginLeft="10dp"
+        android:inputType="number"
+        />
+       
+        <TextView
+        android:id="@+id/protocol"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:text="@string/protocol_label"
+        android:layout_marginLeft="25dp"
+        />
+        
+       <EditText
+        android:id="@+id/iph_protocol"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:hint="@string/zero_hint"
+        android:layout_marginLeft="10dp"
+        android:inputType="number"
+        />
+    
+</LinearLayout>

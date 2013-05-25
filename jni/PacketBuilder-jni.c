@@ -440,7 +440,7 @@ static jboolean SendPacket
 }
 
 // Compute packet checksum value
-static jint ComputeTcpCheckSum
+static jshort ComputeCheckSum
 (JNIEnv* env, jobject thiz, jint nbytes)	{
 	register long sum = 0;
 	unsigned short oddByte;
@@ -490,7 +490,7 @@ JNIEXPORT jint JNICALL JNI_OnLoad(JavaVM* vm, void* reserved)	{
 
 	static JNINativeMethod methods[] = {
 			{"sendPacket", "()Z", (void *)&SendPacket},
-			{"computeTcpCheckSum", "(I)C", (void *)&ComputeTcpCheckSum},
+			{"computeCheckSum", "(I)S", (void *)&ComputeCheckSum},
 			{"buildIpHeader", "(Lcom/wly/net/IpHeader;)Z", (void *)&BuildIpHeader},
 			{"buildTcpHeader", "(Lcom/wly/net/TcpHeader;)Z", (void *)&BuildTcpHeader}
 	};
