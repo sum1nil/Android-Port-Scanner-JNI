@@ -1,0 +1,21 @@
+<LinearLayouti xmlns:android="http://schemas.android.com/apk/res/android"
+    android:id="@+id/row1"
+		android:layout_width="fill_parent"
+    android:layout_height="wrap_content"
+		android:orientation="horizontal">
+		
+		<TextView
+				android:id="@+Id/ihl_label"
+				android:layout_width="wrap_content"
+				android:layout_height="wrap_content"
+				android:text="@string/ihl_label"
+				/>
+				
+		<EditText
+				android:id="@+id/iph_ihl"
+				android:layout_width="wrap_content"
+				android:layout_height="wrap_content"
+				android:hint="zero_hint"
+				/>
+    
+</LinearLayouti>

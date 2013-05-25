@@ -4,8 +4,12 @@
 		<string name="host_name">Host Name or IP: </string>
 		<string name="port_range">Port Range: (456,67,7500-7510) </string>
 		<string name="end_port">End Port: </string>
+		<string name="configure_packet_label">Configure Packet</string>
 		<string name="scan_label">Scan</string>
 		<string name="stop_label">Stop</string>
 		<string name="host_name_hint">www.mysite.com</string>
 		<string name="ip_address_hint">192.168.106.105</string>
+		<string name="zero_hint">0</string>
+		
+		<string name="ihl_label">IHL</string>
 </resources>
