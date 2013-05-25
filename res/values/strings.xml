@@ -3,7 +3,7 @@
     <string name="app1_name">Android Port Scanner</string>
 		<string name="app2_name">Android IP Information</string>
 		<string name="host_name">Host Name or IP: </string>
-		<string name="port_range">Port Range: (456,67,7500-7510) </string>
+		<string name="port_range">Port Range(67,7500-7510): </string>
 		<string name="end_port">End Port: </string>
 		<string name="configure_packet_label">Configure Packet</string>
 		<string name="scan_label">Scan</string>
@@ -17,9 +17,9 @@
 		<string name="tos_label">TOS</string>
 		<string name="ttl_label">TTL</string>
 		<string name="protocol_label">Protocol</string>
-		<string name="tot_len_label">Total Length</string>
-		<string name="id_label">Identification</string>
-		<string name="frag_label">Fragmentation</string>
+		<string name="tot_len_label">Length</string>
+		<string name="id_label">ID</string>
+		<string name="frag_label">FOF</string>
 		<string name="check_label">Check</string>
 		<string name="saddr_label">Send Address</string>
 		<string name="daddr_label">Destination Address</string>
