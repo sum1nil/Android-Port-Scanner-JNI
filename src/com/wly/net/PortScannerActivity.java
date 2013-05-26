@@ -45,6 +45,8 @@ public class PortScannerActivity extends FragmentActivity
 	static List<Integer> portList = new ArrayList<Integer>();
 	public static List<Integer> getPortList() { return portList; }
 	static IpHeader ip = new IpHeader((char)5, (char)4, (char)0,(char)0, (char)0, (short)0,(short)0,(short)0, 0, 0, 0);
+	static TcpHeader tcp = new TcpHeader((short)1, (short)2, (short)3,(short)4, (short)5, (short)6,(short)7,(short)8,
+			(short)9, (short)10,(short)11, (short)12, (short)13,(short)14,(short)15, (long)1234, (long)4321);
 	/** Called when the activity is first created. */
     @Override
     public void onCreate(Bundle savedInstanceState) {
@@ -101,7 +103,7 @@ public class PortScannerActivity extends FragmentActivity
 		        	if(ip == null)
 		        		Log.d(TAG, "ip is null");
 		        	else
-		        		result = buildIpHeader(ip);
+		        		result = buildTcpHeader(tcp);
 		        	}
 				catch(Exception e) {
 					e.printStackTrace();

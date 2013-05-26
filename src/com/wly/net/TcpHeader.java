@@ -3,8 +3,8 @@ package com.wly.net;
 public class TcpHeader
 {
 
- public TcpHeader(char source, char dest, char doff, char res1, char cwr, char ece, char urg, char ack,
- 		char psh, char rst, char syn, char fin, char window, char check, char urg_ptr, long seq, long ack_seq) {
+ public TcpHeader(short source, short dest, short doff, short res1, short cwr, short ece, short urg, short ack,
+ 		short psh, short rst, short syn, short fin, short window, short check, short urg_ptr, long seq, long ack_seq) {
 				this.source = source;
 				this.dest = dest;
 				this.doff = doff;
@@ -25,59 +25,59 @@ public class TcpHeader
  }
  
  
- private int source, dest, doff, res1, cwr, ece, urg, ack, psh, rst, syn, fin,
+ private short source, dest, doff, res1, cwr, ece, urg, ack, psh, rst, syn, fin,
  	window, check, urg_ptr;
-		public  int getSource(){ return source; }
-		public  void setSource(int source){ this.source = source; }
+		public  short getSource(){ return source; }
+		public  void setSource(short source){ this.source = source; }
 
-		public  int getDest(){ return dest; }
-		public  void setDest(int dest){ this.dest = dest; }
+		public  short getDest(){ return dest; }
+		public  void setDest(short dest){ this.dest = dest; }
 
-		public  int getDoff(){ return doff; }
-		public  void setDoff(int doff){ this.doff = doff; }
+		public  short getDoff(){ return doff; }
+		public  void setDoff(short doff){ this.doff = doff; }
 
-		public  int getRes1(){ return res1; }
-		public  void setRes1(int res1){ this.res1 = res1; }
+		public  short getRes1(){ return res1; }
+		public  void setRes1(short res1){ this.res1 = res1; }
 
-		public  int getCwr(){ return cwr; }
-		public  void setCwr(int cwr){ this.cwr = cwr; }
+		public  short getCwr(){ return cwr; }
+		public  void setCwr(short cwr){ this.cwr = cwr; }
 
-		public  int getEce(){ return ece; }
-		public  void setEce(int ece){ this.ece = ece; }
+		public  short getEce(){ return ece; }
+		public  void setEce(short ece){ this.ece = ece; }
 
-		public  int getUrg(){ return urg; }
-		public  void setUrg(int urg){ this.urg = urg; }
+		public  short getUrg(){ return urg; }
+		public  void setUrg(short urg){ this.urg = urg; }
 
-		public  int getAck(){ return ack; }
-		public  void setAck(int ack){ this.ack = ack; }
+		public  short getAck(){ return ack; }
+		public  void setAck(short ack){ this.ack = ack; }
 
-		public  int getPsh(){ return psh; }
-		public  void setPsh(int psh){ this.psh = psh; }
+		public  short getPsh(){ return psh; }
+		public  void setPsh(short psh){ this.psh = psh; }
 
-		public  int getRst(){ return rst; }
-		public  void setRst(int rst){ this.rst = rst; }
+		public  short getRst(){ return rst; }
+		public  void setRst(short rst){ this.rst = rst; }
 
-		public  int getSyn(){ return syn; }
-		public  void setSyn(int syn){ this.syn = syn; } 
+		public  short getSyn(){ return syn; }
+		public  void setSyn(short syn){ this.syn = syn; } 
 
-		public  int getFin(){ return fin; }
-		public  void setFin(int fin){ this.fin = fin; }
+		public  short getFin(){ return fin; }
+		public  void setFin(short fin){ this.fin = fin; }
 
-		public  int getWindow(){ return window; }
-		public  void setWindow(int window){ this.window = window; }
+		public  short getWindow(){ return window; }
+		public  void setWindow(short window){ this.window = window; }
 
-		public  int getCheck(){ return check; }
-		public  void setCheck(int check){ this.check = check; }
+		public  short getCheck(){ return check; }
+		public  void setCheck(short check){ this.check = check; }
 		
-		public  int getUrgPtr(){ return urg_ptr; }
-		public  void setUrgPtr(int urg_ptr){ this.urg_ptr = urg_ptr; }
+		public  short getUrgPtr(){ return urg_ptr; }
+		public  void setUrgPtr(short urg_ptr){ this.urg_ptr = urg_ptr; }
 		
-		private double seq, ack_seq;
-		public  double getSeq(){ return seq; }
-		public  void setSeq(double seq){ this.seq = seq; }
+		private long seq, ack_seq;
+		public  long getSeq(){ return seq; }
+		public  void setSeq(long seq){ this.seq = seq; }
 
-		public  double getAckSeq(){ return ack_seq; };
-		public  void setAckSeq(double ack_seq){ this.ack_seq = ack_seq; };
+		public  long getAckSeq(){ return ack_seq; };
+		public  void setAckSeq(long ack_seq){ this.ack_seq = ack_seq; };
 
 }
  

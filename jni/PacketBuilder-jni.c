@@ -67,15 +67,17 @@ char datagram[PACKET_LEN];
 struct iphdr* ip = (struct iphdr*)datagram;
 // TCP Header
 struct tcphdr* tcp = (struct tcphdr*)(datagram + sizeof(struct ip));
+// Raw Socket
 struct sockaddr_in s_in;
+//
 struct pseudo_header phdr;
-
+static jfieldID fid = NULL;
 // IP Header functions
 static jboolean BuildIpHeader
 (JNIEnv* env, jobject callObj, jobject obj) {
 
 	jboolean result = JNI_TRUE;
-	jfieldID fid = NULL;
+
 	LOGI("In function BuildIpHeader");
 	jclass klass = (*env)->GetObjectClass(env, obj);
 	LOGI("Created ip klass");
@@ -96,7 +98,7 @@ static jboolean BuildIpHeader
 		LOGI("Set ip ihl value to %i", ip->ihl);
 	}
 
-	fid = (*env)->GetFieldID(env, klass, "version", "S");
+	fid = (*env)->GetFieldID(env, klass, "version", "C");
 	if(fid == NULL)	{
 		result = JNI_FALSE;
 		LOGE("(C) Could not retrieve ip version field ID");
@@ -200,6 +202,7 @@ static jboolean BuildIpHeader
 		ip->daddr = value;
 		LOGI("Set ip daddr value to %i", ip->daddr);
 	}
+	fid = NULL;
 	return result;
 }
 
@@ -207,180 +210,182 @@ static jboolean BuildIpHeader
 static jboolean BuildTcpHeader
 (JNIEnv* env, jobject callObj, jobject obj)	{
 	jboolean result = JNI_TRUE;
-	jfieldID fid = NULL;
 	LOGI("In function BuildTcpHeader");
 	jclass klass = (*env)->GetObjectClass(env, obj);
-	LOGI("Created tcp klass");
+
 
 	if(klass == NULL)	{
 		LOGE("Could not reference the instance of TcpHeader");
 		return JNI_FALSE;
 	}
+	else	{
+		LOGI("Created tcp klass");
+	}
 
-	fid = (*env)->GetFieldID(env, klass, "source", "C");
+	fid = (*env)->GetFieldID(env, klass, "source", "S");
 	if(fid == NULL)	{
 		result = JNI_FALSE;;
 		LOGE("(C) Could not retrieve tcp source field ID");
 		return result;
 	}
 	else  {
-		unsigned short value =  (*env)->GetCharField(env, obj, fid);
+		__u16 value =  (*env)->GetShortField(env, obj, fid);
 		tcp->source = value;
 		LOGI("Set tcp source value to %i", tcp->source);
 	}
 
-	fid = (*env)->GetFieldID(env, klass, "dest", "C");
+	fid = (*env)->GetFieldID(env, klass, "dest", "S");
 	if(fid == NULL)	{
 		result = JNI_FALSE;;
 		LOGE("(C) Could not retrieve tcp dest field ID");
 		return result;
 	}
 	else  {
-		unsigned short value =  (*env)->GetCharField(env, obj, fid);
+		__u16 value =  (*env)->GetShortField(env, obj, fid);
 		tcp->dest = value;
 		LOGI("Set tcp dest value to %i", tcp->dest);
 	}
 
-	fid = (*env)->GetFieldID(env, klass, "doff", "C");
+	fid = (*env)->GetFieldID(env, klass, "doff", "S");
 	if(fid == NULL)	{
 		result = JNI_FALSE;;
 		LOGE("(C) Could not tcp retrieve doff field ID");
 		return result;
 	}
 	else  {
-		unsigned short value =  (*env)->GetCharField(env, obj, fid);
+		__u16 value =  (*env)->GetShortField(env, obj, fid);
 		tcp->doff = value;
 		LOGI("Set tcp doff value to %i", tcp->doff);
 	}
 
-	fid = (*env)->GetFieldID(env, klass, "res1", "C");
+	fid = (*env)->GetFieldID(env, klass, "res1", "S");
 	if(fid == NULL)	{
 		result = JNI_FALSE;;
 		LOGE("(C) Could not retrieve tcp res1 field ID");
 		return result;
 	}
 	else  {
-		unsigned short value =  (*env)->GetCharField(env, obj, fid);
+		__u16 value =  (*env)->GetShortField(env, obj, fid);
 		tcp->res1 = value;
 		LOGI("Set tcp res1 value to %i", tcp->res1);
 	}
 
-	fid = (*env)->GetFieldID(env, klass, "cwr", "C");
+	fid = (*env)->GetFieldID(env, klass, "cwr", "S");
 	if(fid == NULL)	{
 		result = JNI_FALSE;;
 		LOGE("(C) Could not retrieve tcp cwr field ID");
 		return result;
 	}
 	else  {
-		unsigned short value =  (*env)->GetCharField(env, obj, fid);
+		__u16 value =  (*env)->GetShortField(env, obj, fid);
 		tcp->cwr = value;
 		LOGI("Set tcp cwr value to %i", tcp->cwr);
 	}
 
-	fid = (*env)->GetFieldID(env, klass, "ece", "C");
+	fid = (*env)->GetFieldID(env, klass, "ece", "S");
 	if(fid == NULL)	{
 		result = JNI_FALSE;;
 		LOGE("(C) Could not retrieve tcp ece field ID");
 		return result;
 	}
 	else  {
-		unsigned short value =  (*env)->GetCharField(env, obj, fid);
+		__u16 value =  (*env)->GetShortField(env, obj, fid);
 		tcp->ece = value;
 		LOGI("Set tcp ece value to %i", tcp->ece);
 	}
 
-	fid = (*env)->GetFieldID(env, klass, "urg", "C");
+	fid = (*env)->GetFieldID(env, klass, "urg", "S");
 	if(fid == NULL)	{
 		result = JNI_FALSE;;
 		LOGE("(C) Could not retrieve tcp urg field ID");
 		return result;
 	}
 	else  {
-		unsigned short value =  (*env)->GetCharField(env, obj, fid);
+		__u16 value =  (*env)->GetShortField(env, obj, fid);
 		tcp->urg = value;
 		LOGI("Set tcp urg value to %i", tcp->urg);
 	}
 
-	fid = (*env)->GetFieldID(env, klass, "ack", "C");
+	fid = (*env)->GetFieldID(env, klass, "ack", "S");
 	if(fid == NULL)	{
 		result = JNI_FALSE;;
 		LOGE("(C) Could not retrieve tcp ack field ID");
 		return result;
 	}
 	else  {
-		unsigned short value =  (*env)->GetCharField(env, obj, fid);
+		__u16 value =  (*env)->GetShortField(env, obj, fid);
 		tcp->ack = value;
 		LOGI("Set tcp ack value to %i", tcp->ack);
 	}
 
-	fid = (*env)->GetFieldID(env, klass, "psh", "C");
+	fid = (*env)->GetFieldID(env, klass, "psh", "S");
 	if(fid == NULL)	{
 		result = JNI_FALSE;;
 		LOGE("(C) Could not retrieve tcp psh field ID");
 		return result;
 	}
 	else  {
-		unsigned short value =  (*env)->GetCharField(env, obj, fid);
+		__u16 value =  (*env)->GetShortField(env, obj, fid);
 		tcp->psh = value;
 		LOGI("Set tcp psh value to %i", tcp->psh);
 	}
 
-	fid = (*env)->GetFieldID(env, klass, "rst", "C");
+	fid = (*env)->GetFieldID(env, klass, "rst", "S");
 	if(fid == NULL)	{
 		result = JNI_FALSE;;
 		LOGE("(C) Could not retrieve tcp rst field ID");
 		return result;
 	}
 	else  {
-		unsigned short value =  (*env)->GetCharField(env, obj, fid);
+		__u16 value =  (*env)->GetShortField(env, obj, fid);
 		tcp->rst = value;
 		LOGI("Set tcp rst value to %i", tcp->rst);
 	}
 
-	fid = (*env)->GetFieldID(env, klass, "syn", "C");
+	fid = (*env)->GetFieldID(env, klass, "syn", "S");
 	if(fid == NULL)	{
 		result = JNI_FALSE;;
 		LOGE("(C) Could not retrieve tcp syn field ID");
 		return result;
 	}
 	else  {
-		__u16 value =  (*env)->GetCharField(env, obj, fid);
+		__u16 value =  (*env)->GetShortField(env, obj, fid);
 		tcp->syn = value;
 		LOGI("Set tcp syn value to %i", tcp->syn);
 	}
 
-	fid = (*env)->GetFieldID(env, klass, "fin", "C");
+	fid = (*env)->GetFieldID(env, klass, "fin", "S");
 	if(fid == NULL)	{
 		result = JNI_FALSE;;
 		LOGE("(C) Could not retrieve tcp fin field ID");
 		return result;
 	}
 	else  {
-		__u16 value =  (*env)->GetCharField(env, obj, fid);
+		__u16 value =  (*env)->GetShortField(env, obj, fid);
 		tcp->fin = value;
 		LOGI("Set tcp fin value to %i", tcp->fin);
 	}
 
-	fid = (*env)->GetFieldID(env, klass, "window", "C");
+	fid = (*env)->GetFieldID(env, klass, "window", "S");
 	if(fid == NULL)	{
 		result = JNI_FALSE;;
 		LOGE("(C) Could not retrieve tcp window field ID");
 		return result;
 	}
 	else  {
-		unsigned short value =  (*env)->GetIntField(env, obj, fid);
+		__u16 value =  (*env)->GetShortField(env, obj, fid);
 		tcp->window = value;
 		LOGI("Set tcp window value to %i", tcp->window);
 	}
 
-	fid = (*env)->GetFieldID(env, klass, "check", "C");
+	fid = (*env)->GetFieldID(env, klass, "check", "S");
 	if(fid == NULL)	{
 		result = JNI_FALSE;;
 		LOGE("(C) Could not retrieve tcp check field ID");
 		return result;
 	}
 	else  {
-		unsigned short value =  (*env)->GetCharField(env, obj, fid);
+		__u16 value =  (*env)->GetShortField(env, obj, fid);
 		tcp->check = value;
 		LOGI("Set tcp check value to %i", tcp->check);
 	}

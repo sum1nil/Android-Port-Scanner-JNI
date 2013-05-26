@@ -19,7 +19,7 @@
 		<string name="protocol_label">Protocol</string>
 		<string name="tot_len_label">Length</string>
 		<string name="id_label">ID</string>
-		<string name="frag_label">FOF</string>
+		<string name="frag_label">FOFF</string>
 		<string name="check_label">Check</string>
 		<string name="saddr_label">Send Address</string>
 		<string name="daddr_label">Destination Address</string>
