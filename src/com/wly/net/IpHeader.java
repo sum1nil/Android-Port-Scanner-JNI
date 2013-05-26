@@ -5,12 +5,12 @@ package com.wly.net;
 public class IpHeader
 {
 	public IpHeader(char ihl, char version,  char tos, char ttl, char protocol, short tot_len,
-			short id, short frag_off, int check, int saddr, int daddr) {
+			short id, short frag_off, int ipCheck, int saddr, int daddr) {
 					this.ihl = ihl;
 					this.version = version;
 					this.tos = tos;
 					this.ttl = ttl;
-					this.check = check;
+					this.ipCheck = ipCheck;
 					this.id = id;
 					this.frag_off = frag_off;
 					this.tot_len = tot_len;
@@ -19,6 +19,21 @@ public class IpHeader
 	}
 
 	
+	public IpHeader() {
+		// TODO Auto-generated constructor stub
+		this.ihl = 0;
+		this.version = 0;
+		this.tos = 0;
+		this.ttl = 0;
+		this.ipCheck = 0;
+		this.id = 0;
+		this.frag_off = 0;
+		this.tot_len = 0;
+		this.saddr = 0;
+		this.daddr = 0;
+	}
+
+
 	private char ihl, version, tos, ttl, protocol; 
 	
 	public  char getIhl(){ return ihl; }
@@ -46,9 +61,9 @@ public class IpHeader
 	public short getFragOff() { return frag_off; }
 	public void setFragOff(short frag_off) { this.frag_off = frag_off; }
   
-	private int check, saddr, daddr;
-	public  int getCheck(){ return check; }
-	public  void setCheck(int check){ this.check = check; } 
+	private int ipCheck, saddr, daddr;
+	public  int getIpCheck(){ return ipCheck; }
+	public  void setIpCheck(int check){ this.ipCheck = check; } 
  
 	public  int getSourceAddress(){ return saddr; }
 	public  void setSourceAddress(int saddr){ this.saddr = saddr; }

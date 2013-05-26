@@ -25,7 +25,29 @@ public class TcpHeader
  }
  
  
- private short source, dest, doff, res1, cwr, ece, urg, ack, psh, rst, syn, fin,
+ public TcpHeader() {
+	// TODO Auto-generated constructor stub
+	 this.source = 0;
+		this.dest = 0;
+		this.doff = 0;
+		this.res1 = 0;
+		this.cwr = 0;
+		this.ece = 0;
+		this.urg = 0;
+		this.ack = 0;
+		this.psh = 0;
+		this.rst = 0;
+		this.syn = 0;
+		this.fin = 0;
+		this.window = 0;
+		this.check = 0;
+		this.urg_ptr = 0;
+		this.seq = 0;
+		this.ack_seq = 0; 
+ }
+
+
+private short source, dest, doff, res1, cwr, ece, urg, ack, psh, rst, syn, fin,
  	window, check, urg_ptr;
 		public  short getSource(){ return source; }
 		public  void setSource(short source){ this.source = source; }

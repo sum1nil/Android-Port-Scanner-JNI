@@ -16,6 +16,7 @@
 package com.wly.net;
 
 import java.util.ArrayList;
+import java.util.Collections;
 import java.util.List;
 
 import android.content.Intent;
@@ -44,17 +45,61 @@ public class PortScannerActivity extends FragmentActivity
 	static String ipAddress = null;
 	static List<Integer> portList = new ArrayList<Integer>();
 	public static List<Integer> getPortList() { return portList; }
-	static IpHeader ip = new IpHeader((char)5, (char)4, (char)0,(char)0, (char)0, (short)0,(short)0,(short)0, 0, 0, 0);
-	static TcpHeader tcp = new TcpHeader((short)1, (short)2, (short)3,(short)4, (short)5, (short)6,(short)7,(short)8,
-			(short)9, (short)10,(short)11, (short)12, (short)13,(short)14,(short)15, (long)1234, (long)4321);
+	static IpHeader ip; // = new IpHeader((char)5, (char)4, (char)0,(char)0, (char)0, (short)0,(short)0,(short)0, 0, 0, 0);
+	static TcpHeader tcp; // = new TcpHeader((short)1, (short)2, (short)3,(short)4, (short)5, (short)6,(short)7,(short)8,
+			// (short)9, (short)10,(short)11, (short)12, (short)13,(short)14,(short)15, (long)1234, (long)4321);
+	private static Bundle datagramBundle = new Bundle();
+	
+	public static void createPacketDatagram(Bundle pktDatagram)	{
+		ip = new IpHeader();
+		ip.setIhl(pktDatagram.getChar("ihl"));
+		ip.setVer(pktDatagram.getChar("version"));
+		ip.setTos(pktDatagram.getChar("tos"));
+		ip.setVer(pktDatagram.getChar("ttl"));
+		ip.setTos(pktDatagram.getChar("protocol"));
+		ip.setTotalLen(pktDatagram.getShort("tot_len"));
+		ip.setId(pktDatagram.getShort("id"));
+		ip.setTotalLen(pktDatagram.getShort("frag_off"));
+		ip.setIpCheck(pktDatagram.getInt("ipCheck"));
+		ip.setSourceAddress(pktDatagram.getInt("saddr"));
+		ip.setDestAddress(pktDatagram.getInt("daddr"));
+		tcp = new TcpHeader();
+		tcp.setSource(pktDatagram.getShort("source"));
+		tcp.setDest(pktDatagram.getShort("dest"));
+		tcp.setDoff(pktDatagram.getShort("doff"));
+		tcp.setRes1(pktDatagram.getShort("res1"));
+		tcp.setCwr(pktDatagram.getShort("cwr"));
+		tcp.setEce(pktDatagram.getShort("ece"));
+		tcp.setUrg(pktDatagram.getShort("urg"));
+		tcp.setAck(pktDatagram.getShort("ack"));
+		tcp.setPsh(pktDatagram.getShort("psh"));
+		tcp.setRst(pktDatagram.getShort("rst"));
+		tcp.setSyn(pktDatagram.getShort("syn"));
+		tcp.setFin(pktDatagram.getShort("fin"));
+		tcp.setWindow(pktDatagram.getShort("window"));
+		tcp.setCheck(pktDatagram.getShort("check"));
+		tcp.setUrgPtr(pktDatagram.getShort("urg_ptr"));
+		tcp.setSeq(pktDatagram.getLong("seq"));
+		tcp.setAckSeq(pktDatagram.getLong("ack_seq"));
+		
+		datagramBundle.putAll(pktDatagram);
+	}
+	
+	
 	/** Called when the activity is first created. */
     @Override
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.host_ports);
-				
-				((EditText)findViewById(R.id.host_name_text)).setOnEditorActionListener(this);
-				((EditText)findViewById(R.id.port_range_text)).setOnEditorActionListener(this);
+        
+        if(savedInstanceState == null)
+        	Toast.makeText(this, "No saved bundle or bundle is null.", Toast.LENGTH_LONG).show();
+        else
+        	createPacketDatagram(savedInstanceState);
+
+        
+		((EditText)findViewById(R.id.host_name_text)).setOnEditorActionListener(this);
+		((EditText)findViewById(R.id.port_range_text)).setOnEditorActionListener(this);
 
         // Check whether the activity is using the layout version with
         // the fragment_container FrameLayout. If so, we must add the first fragment
@@ -79,8 +124,16 @@ public class PortScannerActivity extends FragmentActivity
                     .add(R.id.fragment_container, firstFragment).commit();
         }
     }
-
+    
 	@Override
+	public void onSaveInstanceState(Bundle savedPacketInstanceState) {
+		if(!datagramBundle.isEmpty())
+			savedPacketInstanceState.putAll(datagramBundle);
+		else
+			Toast.makeText(this, "The datagram bundle is empty!", Toast.LENGTH_LONG).show();
+	}
+	
+    @Override
 	public boolean onCreateOptionsMenu(Menu menu) {
 		// Inflate the menu; this adds items to the action bar if it is present.
 		getMenuInflater().inflate(R.menu.action_bar_menu, menu);
@@ -159,8 +212,7 @@ public class PortScannerActivity extends FragmentActivity
 		boolean result = true;
 		if (actionId == EditorInfo.IME_ACTION_NEXT || actionId == EditorInfo.IME_ACTION_DONE) {
 			// the user is done typing.
-		
-			 
+		 
 			switch (v.getId()) {
 			case R.id.host_name_text:
 				Toast.makeText(this, "In host_name_text case statement.", Toast.LENGTH_SHORT).show();
@@ -204,6 +256,7 @@ public class PortScannerActivity extends FragmentActivity
 				portList.add(Integer.valueOf((Integer.parseInt(s))));
 		}
 		// To Do: sort ports descending
+		Collections.sort(portList);
 		//for(Integer i : portList)
 			//Toast.makeText(this,"Port# " + i.intValue(),Toast.LENGTH_SHORT).show();
 				

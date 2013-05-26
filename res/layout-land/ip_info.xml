@@ -8,7 +8,7 @@
 		    android:id="@+id/ip_row1"
 		    android:layout_width="match_parent"
 		    android:layout_height="wrap_content"
-		    layout="@layout/ip_info_bar" 
+		    layout="@layout/ip_info_box" 
 		 />
 
 

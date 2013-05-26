@@ -20,11 +20,18 @@
             </intent-filter>
         </activity>
                 <activity android:name=".PacketInfoActivity"
-                          android:label="@string/app2_name">
+                          android:label="@string/app2_name"
+                          android:windowSoftInputMode="adjustResize">
             <intent-filter>
                 <action android:name="android.intent.action.MAIN" />
                 <category android:name="android.intent.category.LAUNCHER" />
             </intent-filter>
         </activity>
     </application>
+    <supports-screens 
+        android:largeScreens="true" 
+        android:normalScreens="true"
+        android:smallScreens="true" 
+        android:anyDensity="true"
+    />
 </manifest> 
